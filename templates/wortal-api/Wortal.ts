@@ -1,4 +1,22 @@
 export class Wortal {
+    private static _platform: Platform;
+    private static _linkInterstitialId: string;
+    private static _linkRewardedId: string;
+    private static _isInit: boolean = false;
+
+    /**
+     * Initializes the Wortal extension. It is necessary to call this before using the Wortal SDK.
+     */
+    static init() {
+        this._platform = this.GetPlatform();
+
+        if (this._platform === Platform.LINK) {
+            this.GetLinkAdUnitIds();
+        }
+
+        this._isInit = true;
+    }
+
     /**
      * Shows an interstitial ad.
      * @param type Type of ad placement.
@@ -25,6 +43,11 @@ export class Wortal {
         // Ex: Ad does not fill, adBreakDone and noShow are called.
         // This can lead to duplicating calls and unintended consequences if these callbacks are used together.
         // Ex: Resume game on both afterAd and adBreakDone. Resume is called twice.
+
+        if (!this._isInit) {
+            console.error("[Wortal] Not initialized yet. Call init() before using.");
+            return;
+        }
 
         let placement: string = type;
         let adDone: boolean = false;
@@ -91,6 +114,11 @@ export class Wortal {
 
         //TODO: handle beforeReward args
 
+        if (!this._isInit) {
+            console.error("[Wortal] Not initialized yet. Call init() before using.");
+            return;
+        }
+
         let placement: string = Placement.REWARD;
         let adDone: boolean = false;
 
@@ -140,6 +168,29 @@ export class Wortal {
             },
         });
     }
+
+    private static GetPlatform(): Platform {
+        let platform = (window as any).getWortalPlatform();
+
+        switch (platform) {
+            case 'wortal':
+                return Platform.WORTAL;
+            case 'link':
+                return Platform.LINK;
+            case 'viber':
+                return Platform.VIBER;
+            default:
+                return Platform.DEBUG;
+        }
+    }
+
+    private static GetLinkAdUnitIds(): string[] {
+        (window as any).wortalGame.getAdUnitsAsync().then((adUnits) => {
+            console.log(adUnits);
+        });
+
+        return null;
+    }
 }
 
 /**
@@ -173,4 +224,11 @@ export enum Placement {
      * The player reaches a point in the game where they can be offered a reward.
      */
     REWARD = 'reward'
+}
+
+enum Platform {
+    DEBUG = 'debug',
+    WORTAL = 'wortal',
+    LINK = 'link',
+    VIBER = 'viber'
 }
