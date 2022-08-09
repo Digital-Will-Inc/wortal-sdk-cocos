@@ -11,8 +11,8 @@ function log(...arg: any[]) {
 export const load: BuildPlugin.load = () => {
     log("ProjectPath:", Editor.Project.path);
 
-    const preview_template_dir = "preview-template";
-    const build_templates_dir = "build-templates";
+    const preview_template_dir = "preview";
+    const build_templates_dir = "build";
     const project_path = Editor.Project.path;
     const templates_dir = path.join(Editor.Project.path, "extensions/" + PACKAGE_NAME + "/templates/");
     const assets_dir = path.join(project_path, "assets");
