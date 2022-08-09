@@ -1,5 +1,3 @@
-import { game } from "cc";
-
 export class Wortal {
     /**
      * Shows an interstitial ad.
