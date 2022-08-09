@@ -8,13 +8,13 @@ export class Wortal {
      * Initializes the Wortal extension. It is necessary to call this before using the Wortal SDK.
      */
     static init() {
-        this._platform = this.GetPlatform();
+        Wortal._platform = Wortal.GetPlatform();
 
-        if (this._platform === Platform.LINK) {
-            this.GetLinkAdUnitIds();
+        if (Wortal._platform === Platform.LINK) {
+            Wortal.GetLinkAdUnitIds();
         }
 
-        this._isInit = true;
+        Wortal._isInit = true;
     }
 
     /**
@@ -44,7 +44,7 @@ export class Wortal {
         // This can lead to duplicating calls and unintended consequences if these callbacks are used together.
         // Ex: Resume game on both afterAd and adBreakDone. Resume is called twice.
 
-        if (!this._isInit) {
+        if (!Wortal._isInit) {
             console.error("[Wortal] Not initialized yet. Call init() before using.");
             return;
         }
@@ -53,8 +53,8 @@ export class Wortal {
         let adUnit: string = "";
         let adDone: boolean = false;
 
-        if (this._platform === Platform.LINK) {
-            adUnit = this._linkInterstitialId;
+        if (Wortal._platform === Platform.LINK) {
+            adUnit = Wortal._linkInterstitialId;
         }
 
         (window as any).triggerWortalAd(placement, adUnit, description, {
@@ -119,7 +119,7 @@ export class Wortal {
 
         //TODO: handle beforeReward args
 
-        if (!this._isInit) {
+        if (!Wortal._isInit) {
             console.error("[Wortal] Not initialized yet. Call init() before using.");
             return;
         }
@@ -128,8 +128,8 @@ export class Wortal {
         let adUnit: string = "";
         let adDone: boolean = false;
 
-        if (this._platform === Platform.LINK) {
-            adUnit = this._linkRewardedId;
+        if (Wortal._platform === Platform.LINK) {
+            adUnit = Wortal._linkRewardedId;
         }
 
         (window as any).triggerWortalAd(placement, adUnit, description, {
