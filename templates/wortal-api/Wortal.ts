@@ -50,9 +50,14 @@ export class Wortal {
         }
 
         let placement: string = type;
+        let adUnit: string = "";
         let adDone: boolean = false;
 
-        (window as any).triggerWortalAd(placement, description, {
+        if (this._platform === Platform.LINK) {
+            adUnit = this._linkInterstitialId;
+        }
+
+        (window as any).triggerWortalAd(placement, adUnit, description, {
             beforeAd: () => {
                 console.log("[Wortal] BeforeAd");
                 if (beforeAd) beforeAd();
@@ -120,9 +125,14 @@ export class Wortal {
         }
 
         let placement: string = Placement.REWARD;
+        let adUnit: string = "";
         let adDone: boolean = false;
 
-        (window as any).triggerWortalAd(placement, description, {
+        if (this._platform === Platform.LINK) {
+            adUnit = this._linkRewardedId;
+        }
+
+        (window as any).triggerWortalAd(placement, adUnit, description, {
             beforeReward: () => {
                 console.log("[Wortal] BeforeReward");
                 if (beforeReward) beforeReward();
