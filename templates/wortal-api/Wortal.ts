@@ -9,6 +9,7 @@ export class Wortal {
      */
     static init() {
         Wortal._platform = Wortal.GetPlatform();
+        console.log("[Wortal] Platform: " + this._platform);
 
         if (Wortal._platform === Platform.LINK) {
             Wortal.GetLinkAdUnitIds();
@@ -194,12 +195,12 @@ export class Wortal {
         }
     }
 
-    private static GetLinkAdUnitIds(): string[] {
+    private static GetLinkAdUnitIds() {
         (window as any).wortalGame.getAdUnitsAsync().then((adUnits) => {
             console.log(adUnits);
+            this._linkInterstitialId = adUnits[0].id;
+            this._linkRewardedId = adUnits[1].id;
         });
-
-        return null;
     }
 }
 
