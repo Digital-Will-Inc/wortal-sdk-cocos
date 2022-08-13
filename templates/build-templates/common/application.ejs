@@ -1,10 +1,12 @@
 <%- include(versionCheckTemplate, { version: '1.0.0'}) %>
+
+var onProgress = null;
+
 export function createApplication ({
     loadJsListFile,
     fetchWasm,
 }) {
     // NOTE: before here we shall not import any module!
-
     let promise = Promise.resolve();
 
     <% if (hasPhysicsAmmo) { %>
@@ -27,19 +29,14 @@ export function createApplication ({
     }) {
         let settings;
         let cc;
-
-        // The game is loading.
-
         return Promise.resolve()
             .then(() => topLevelImport('cc'))
             .then((engine) => {
                 cc = engine;
+                setLoadingProgress();
                 return loadSettingsJson(cc);
             }).then(() => {
                 settings = window._CCSettings;
-                
-                // Set the debug based on the build settings.
-
                 return initializeGame(cc, settings, findCanvas)
                     .then(() => {
                         if (!settings.renderPipeline) return cc.game.run();
@@ -143,7 +140,6 @@ function initializeGame (cc, settings, findCanvas) {
     }
     const gameOptions = getGameOptions(cc, settings, findCanvas);
     const success = cc.game.init(gameOptions);
-
     try {
         if (settings.customLayers) {
             settings.customLayers.forEach((layer) => {
@@ -153,24 +149,28 @@ function initializeGame (cc, settings, findCanvas) {
     } catch(error) {
         console.warn(error);
     }
-
     return success ? Promise.resolve(success) : Promise.reject();
+}
+
+function setLoadingProgress () {
+    onProgress = function (finish, total) {
+        var progress = 100 * finish / total;
+        if (window.wortalGame) {
+            window.wortalGame.setLoadingProgress(100 * progress);
+        };
+    };
 }
 
 function onGameStarted (cc, settings) {
     window._CCSettings = undefined;
-
     cc.view.resizeWithBrowserSize(true);
     const launchScene = settings.launchScene;
-    // load scene
-    cc.director.loadScene(launchScene, null,
-        function () {
+	cc.director.preloadScene(launchScene, onProgress, function () {
+        cc.director.loadScene(launchScene, null, function () {
             cc.view.setDesignResolutionSize(<%= resolution.width || 960 %>, <%= resolution.height || 640 %>, <%= resolution.policy %>);
-            console.log(`Success to load scene: ${launchScene}`);
-
-            // Finished loading the game.
-        }
-    );
+            console.log(`[Wortal] Successfully loaded scene: ${launchScene}`);
+        });
+    });
 }
 
 function getGameOptions(cc, settings, findCanvas) {
