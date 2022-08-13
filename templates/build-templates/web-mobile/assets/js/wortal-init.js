@@ -6,13 +6,13 @@ console.log('[Wortal] Platform: ' + platform);
 
 switch (platform) {
     case 'wortal':
-        init.src = './js/wortal-init-adsense.js';
+        init.src = 'assets/js/wortal-init-adsense.js';
         break;
     case 'link':
-        init.src = './js/wortal-init-link.js';
+        init.src = 'assets/js/wortal-init-link.js';
         break;
     case 'viber':
-        init.src = './js/wortal-init-viber.js';
+        init.src = 'assets/js/wortal-init-viber.js';
         break;
     default:
         console.log('[Wortal] Platform not supported.');
