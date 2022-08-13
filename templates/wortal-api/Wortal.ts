@@ -61,11 +61,11 @@ export class Wortal {
         (window as any).triggerWortalAd(placement, adUnit, description, {
             beforeAd: () => {
                 console.log("[Wortal] BeforeAd");
-                if (beforeAd) beforeAd();
+                beforeAd();
             },
             afterAd: () => {
                 console.log("[Wortal] AfterAd");
-                if (afterAd) afterAd();
+                afterAd();
                 adDone = true;
             },
             adBreakDone: () => {
@@ -96,27 +96,27 @@ export class Wortal {
     /**
      * Calls for rewarded ad.
      * @param description Description of the ad being shown. Ex: 'ReviveAndContinue'.
-     * @param beforeReward Callback before showing the rewarded ad.
+     * @param beforeAd Callback before the ad is shown. Pause the game here.
      * @param afterAd Callback after the ad is shown.
      * @param adDismissed Callback when the player cancelled the rewarded ad before it finished. Do not reward the player.
      * @param adViewed Callback when the player viewed the rewarded ad successfully. Reward the player.
      */
-    static requestRewarded(description: string, beforeReward: Function, afterAd: Function, adDismissed: Function,
-                        adViewed: Function): void;
+    static requestRewarded(description: string, beforeAd: Function, afterAd: Function, adDismissed: Function,
+                           adViewed: Function): void;
 
     /**
      * Calls for rewarded ad.
      * @param description Description of the ad being shown. Ex: 'ReviveAndContinue'.
-     * @param beforeReward Callback before showing the rewarded ad. This can trigger a popup giving the player the option to view the ad for a reward.
+     * @param beforeAd Callback before the ad is shown. Pause the game here.
      * @param afterAd Callback after the ad is shown.
      * @param adDismissed Callback when the player cancelled the rewarded ad before it finished. Do not reward the player.
      * @param adViewed Callback when the player viewed the rewarded ad successfully. Reward the player.
-     * @param beforeAd Callback before the ad is shown. Pause the game here.
+     * @param beforeReward Callback before showing the rewarded ad. This can trigger a popup giving the player the option to view the ad for a reward.
      * @param adBreakDone Callback when the adBreak has completed. Resume the game here.
      * @param noShow Callback when the ad is timed out or not served. Resume the game here.
      */
-    static requestRewarded(description: string, beforeReward: Function, afterAd: Function, adDismissed: Function,
-                        adViewed: Function, beforeAd?: Function, adBreakDone?: Function, noShow?: Function) {
+    static requestRewarded(description: string, beforeAd: Function, afterAd: Function, adDismissed: Function,
+                           adViewed: Function, beforeReward?: Function, adBreakDone?: Function, noShow?: Function) {
 
         //TODO: handle beforeReward args
 
@@ -134,26 +134,30 @@ export class Wortal {
         }
 
         (window as any).triggerWortalAd(placement, adUnit, description, {
-            beforeReward: () => {
-                console.log("[Wortal] BeforeReward");
-                if (beforeReward) beforeReward();
+            beforeAd: () => {
+                console.log("[Wortal] BeforeAd");
+                if (beforeAd) beforeAd();
             },
             afterAd: () => {
                 console.log("[Wortal] AfterAd");
-                if (afterAd) afterAd();
+                afterAd();
                 adDone = true;
             },
             adDismissed: () => {
                 console.log("[Wortal] AdDismissed");
-                if (adDismissed) adDismissed();
+                adDismissed();
             },
             adViewed: () => {
                 console.log("[Wortal] AdViewed");
-                if (adViewed) adViewed();
+                adViewed();
             },
-            beforeAd: () => {
-                console.log("[Wortal] BeforeAd");
-                if (beforeAd) beforeAd();
+            beforeReward: (showAdFn) => {
+                console.log("[Wortal] BeforeReward");
+                if (beforeReward) {
+                    beforeReward(showAdFn);
+                } else {
+                    //TODO: can we auto trigger the rewarded ad here?
+                }
             },
             adBreakDone: () => {
                 console.log("[Wortal] AdBreakDone");
