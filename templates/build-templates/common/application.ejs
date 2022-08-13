@@ -156,7 +156,7 @@ function setLoadingProgress () {
     onProgress = function (finish, total) {
         var progress = 100 * finish / total;
         if (window.wortalGame) {
-            window.wortalGame.setLoadingProgress(100 * progress);
+            window.wortalGame.setLoadingProgress(progress);
         };
     };
 }
