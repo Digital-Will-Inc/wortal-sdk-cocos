@@ -1,17 +1,14 @@
 window.addEventListener("load", () => {
     window.initWortal(function () {
+        console.log("[Wortal] Setup complete.");
         if (window.wortalGame) {
+            document.getElementById("loading-cover").style.display = "none";
             wortalGame = window.wortalGame;
-            Promise.all([showGame(), wortalGame.initializeAsync()])
-                .then(() => {
-                    wortalGame.startGameAsync();
-                })
+            wortalGame.initializeAsync().then(() => {
+                wortalGame.startGameAsync();
+            });
         } else {
-            showGame();
+            console.error("[Wortal] Failed to find wortalGame.");
         }
     });
 });
-
-function showGame() {
-    document.getElementById("loading-cover").style.display = "none";
-}
