@@ -15,14 +15,9 @@ export const load: BuildPlugin.load = () => {
     const assets_dir = path.join(project_path, "assets");
     const api_dir = "wortal-api"
     const build_dir = "build-templates";
-    const preview_dir = "preview-template";
     const templates_dir = path.join(Editor.Project.path, "extensions/" + PACKAGE_NAME + "/templates/");
 
     const copy_list = [
-        {
-            src: path.join(templates_dir, preview_dir),
-            dest: path.join(project_path, preview_dir)
-        },
         {
             src: path.join(templates_dir, build_dir),
             dest: path.join(project_path, build_dir)
