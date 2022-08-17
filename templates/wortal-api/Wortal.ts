@@ -15,6 +15,7 @@ export class Wortal {
             Wortal.GetLinkAdUnitIds();
         }
 
+        console.log("[Wortal] Initialized");
         Wortal._isInit = true;
     }
 
@@ -46,8 +47,7 @@ export class Wortal {
         // Ex: Resume game on both afterAd and adBreakDone. Resume is called twice.
 
         if (!Wortal._isInit) {
-            console.error("[Wortal] Not initialized yet. Call init() before using.");
-            return;
+            Wortal.init();
         }
 
         let placement: string = type;
@@ -121,8 +121,7 @@ export class Wortal {
         //TODO: handle beforeReward args
 
         if (!Wortal._isInit) {
-            console.error("[Wortal] Not initialized yet. Call init() before using.");
-            return;
+            Wortal.init();
         }
 
         let placement: string = Placement.REWARD;
@@ -201,7 +200,7 @@ export class Wortal {
 
     private static GetLinkAdUnitIds() {
         (window as any).wortalGame.getAdUnitsAsync().then((adUnits) => {
-            console.log(adUnits);
+            console.log("Link AdUnit IDs returned: \n" + adUnits);
             this._linkInterstitialId = adUnits[0].id;
             this._linkRewardedId = adUnits[1].id;
         });
