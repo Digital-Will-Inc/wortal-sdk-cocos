@@ -1,0 +1,46 @@
+#app {
+    color: var(--color-normal-contrast-weakest);
+    margin: auto;
+    width: 180px;
+}
+
+div {
+    background-color: #111111;
+    border: 1px solid #000000;
+    color: white;
+}
+
+p {
+    margin:auto;
+    padding: 10px;
+    font-size: medium;
+}
+
+code {
+    font-family: "Noto Mono", monospace;
+    font-size: smaller;
+}
+
+.container {
+    background-color: #333333;
+    height: 100%;
+    overflow: scroll;
+}
+
+.bar {
+    background-color: #111111;
+    height: 64px;
+    width: 100%;
+    color: white;
+}
+
+.infobox-header {
+    background-color: #111111;
+    height: 30px;
+    font-size: large;
+}
+
+.infobox {
+    margin: 10px;
+    font-size: medium
+}

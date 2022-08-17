@@ -2,15 +2,46 @@
     "package_version": 2,
     "version": "1.0.0",
     "name": "wortal",
+    "title": "i18n:wortal.title",
     "description": "i18n:wortal.description",
     "main": "./dist/main.js",
+    "author": "Digital Will",
+    "editor": ">=3.4.0",
     "dependencies": {
         "@types/fs-extra": "^5.0.4",
         "@types/node": "^14.5.2",
         "fs-extra": "^10.0.0"
     },
-    "author": "Digital Will",
-    "editor": ">=3.4.0",
+    "panels": {
+        "default": {
+            "title": "i18n:wortal.title",
+            "type": "dockable",
+            "main": "dist/panels/default",
+            "icon": "./static/img/icon.png",
+            "size": {
+                "min-width": 400,
+                "min-height": 300,
+                "width": 1000,
+                "height": 800
+            }
+        }
+    },
+    "contributions": {
+        "menu": [
+            {
+                "path": "i18n:menu.panel/Wortal",
+                "label": "i18n:wortal.panel_info",
+                "message": "open-panel"
+            }
+        ],
+        "messages": {
+            "open-panel": {
+                "methods": [
+                    "openPanel"
+                ]
+            }
+        }
+    },
     "scripts": {
         "build": "tsc -b",
         "watch": "tsc -w"

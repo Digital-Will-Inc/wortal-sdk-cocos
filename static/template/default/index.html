@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="bar">
+        <br/>
+        <h1 id="app"> Wortal SDK </h1>
+    </div>
+    <h2> Installation </h2>
+    <p>
+        Once you have enabled the <b>WortalSDK</b> extension, all the required files
+        are added to your project. You can then call the <b>WortalSDK</b> in your game code.
+    </p>
+    <h2> Interstitial Ads </h2>
+    <p>
+        Calling for interstitial ads is simple and can be done with one line of code:
+    </p>
+    <div class="infobox">
+        <p>
+            <code>
+            Wortal.showInterstitial(type, description, beforeAdCallback, afterAdCallback);
+            </code>
+            <br/>
+            <code>
+                // Example:
+                <br/>
+                Wortal.showInterstitial(Placement.NEXT, 'NextLevel', pauseGame, resumeGame);
+            </code>
+        </p>
+    </div>
+    <h2> Rewarded Ads </h2>
+    <p>
+        Calling for rewarded ads is similar to interstitials, but with more callbacks:
+    </p>
+    <div class="infobox">
+        <p>
+            <code>
+                Wortal.requestRewarded(description, beforeAdCallback, afterAdCallback, adDismissedCallback, adViewedCallback);
+            </code>
+            <br/>
+            <code>
+                // Example:
+                <br/>
+                Wortal.requestRewarded('ReviveAndContinue', pauseGame, resumeGame, noReward, rewardPlayer);
+            </code>
+        </p>
+    </div>
+    <p>
+        <ui-icon value="info"></ui-icon> NOTE: Players should only be rewarded in the <code>adViewedCallback</code>.
+    </p>
+    <h2> Build </h2>
+    <p>
+        To use the <b>WortalSDK</b> in your game, you must build with the <b>web-mobile</b> template.
+    </p>
+</div>
