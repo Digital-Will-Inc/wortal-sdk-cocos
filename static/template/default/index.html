@@ -5,8 +5,14 @@
     </div>
     <h2> Installation </h2>
     <p>
-        Once you have enabled the <b>WortalSDK</b> extension, all the required files
-        are added to your project. You can then call the <b>WortalSDK</b> in your game code.
+        Once you have enabled the <b>wortal-sdk</b> extension, all the required files
+        are added to your project. You can then call the <b>WortalSDK</b> in your game code via the <code>Wortal</code> class.
+    </p>
+    <h2> Initialization </h2>
+    <p>
+        You should call <code>Wortal.init()</code> when your game loads. If this is not called, it will be called automatically the
+        first time you call for an ad. In this case it is possible for the first ad call to be skipped if the SDK has not
+        finished initializing.
     </p>
     <h2> Interstitial Ads </h2>
     <p>

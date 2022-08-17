@@ -15,7 +15,11 @@ Cocos Creator Extension for the Wortal SDK to deploy games on the Digital Will H
 
 ## Using Wortal SDK
 
-### Import Wortal
+### Initialize Wortal
+
+You should call `Wortal.init()` when your game loads. If this is not called, it will be called automatically the
+first time you call for an ad. In this case it is possible for the first ad call to be skipped if the SDK has not
+finished initializing.
 
 You will need to import the `Wortal` class wherever you intend to call for ads.
 

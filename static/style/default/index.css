@@ -17,8 +17,10 @@ p {
 }
 
 code {
+    background-color: #000000;
     font-family: "Noto Mono", monospace;
     font-size: smaller;
+    color: aquamarine;
 }
 
 .container {
