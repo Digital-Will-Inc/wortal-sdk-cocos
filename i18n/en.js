@@ -1,5 +1,8 @@
 "use strict";
 
 module.exports = {
-    description: "Extension for interfacing with the Digital Will HTML5 Game Portal (Wortal)."
+    title: "Wortal SDK",
+    description: "Extension for interfacing with the Digital Will HTML5 Game Portal (Wortal).",
+    panel_title: "Wortal SDK",
+    panel_info: "SDK Info"
 };
