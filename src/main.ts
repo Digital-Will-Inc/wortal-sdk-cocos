@@ -2,7 +2,7 @@ import { BuildPlugin } from '../@types';
 import { existsSync, copySync, pathExistsSync } from 'fs-extra';
 import path from 'path';
 
-const PACKAGE_NAME = 'wortal';
+const PACKAGE_NAME = 'wortal-sdk';
 
 function log(...arg: any[]) {
     return console.log(`[${PACKAGE_NAME}] `, ...arg);
