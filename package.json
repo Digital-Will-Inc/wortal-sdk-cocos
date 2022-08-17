@@ -2,8 +2,8 @@
     "package_version": 2,
     "version": "1.0.0",
     "name": "wortal-sdk",
-    "title": "i18n:wortal.title",
-    "description": "i18n:wortal.description",
+    "title": "i18n:wortal-sdk.title",
+    "description": "i18n:wortal-sdk.description",
     "main": "./dist/main.js",
     "author": "Digital Will",
     "editor": ">=3.4.0",
@@ -14,7 +14,7 @@
     },
     "panels": {
         "default": {
-            "title": "i18n:wortal.title",
+            "title": "i18n:wortal-sdk.title",
             "type": "dockable",
             "main": "dist/panels/default",
             "icon": "./static/img/icon.png",
@@ -30,7 +30,7 @@
         "menu": [
             {
                 "path": "i18n:menu.panel/Wortal",
-                "label": "i18n:wortal.panel_info",
+                "label": "i18n:wortal-sdk.panel_info",
                 "message": "open-panel"
             }
         ],
