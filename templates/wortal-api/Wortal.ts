@@ -56,6 +56,10 @@ export class Wortal {
 
         if (Wortal._platform === Platform.LINK) {
             adUnit = Wortal._linkInterstitialId;
+            if (adUnit == null) {
+                console.warn("[Wortal] AdUnitId was null. Skipping ad call. Call Wortal.init() on game start to prevent this.");
+                return;
+            }
         }
 
         (window as any).triggerWortalAd(placement, adUnit, description, {
@@ -130,6 +134,10 @@ export class Wortal {
 
         if (Wortal._platform === Platform.LINK) {
             adUnit = Wortal._linkRewardedId;
+            if (adUnit == null) {
+                console.warn("[Wortal] AdUnitId was null. Skipping ad call. Call Wortal.init() on game start to prevent this.");
+                return;
+            }
         }
 
         (window as any).triggerWortalAd(placement, adUnit, description, {
