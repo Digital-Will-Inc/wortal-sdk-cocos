@@ -43,10 +43,10 @@ Wortal.showInterstitial(Placement.NEXT, 'NextLevel', pauseGame, resumeGame);
 Calling for rewarded ads is similar to interstitials, but with more callbacks:
 
 ```typescript
-Wortal.requestRewarded(description, beforeAdCallback, afterAdCallback, adDismissedCallback, adViewedCallback);
+Wortal.showRewarded(description, beforeAdCallback, afterAdCallback, adDismissedCallback, adViewedCallback);
 
 // Example:
-Wortal.requestRewarded('ReviveAndContinue', pauseGame, resumeGame, noReward, rewardPlayer);
+Wortal.showRewarded('ReviveAndContinue', pauseGame, resumeGame, noReward, rewardPlayer);
 ```
 
 ## Building
