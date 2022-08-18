@@ -8,11 +8,16 @@ export class Wortal {
      * Initializes the Wortal extension. It is necessary to call this before using the Wortal SDK.
      */
     static init() {
-        Wortal._platform = Wortal.GetPlatform();
+        if (Wortal._isInit) {
+            console.warn("[Wortal] Already initialized");
+            return;
+        }
+
+        Wortal._platform = Wortal.getPlatform();
         console.log("[Wortal] Platform: " + this._platform);
 
         if (Wortal._platform === Platform.LINK) {
-            Wortal.GetLinkAdUnitIds();
+            Wortal.getLinkAdUnitIds();
         }
 
         console.log("[Wortal] Initialized");
@@ -98,18 +103,18 @@ export class Wortal {
     }
 
     /**
-     * Calls for rewarded ad.
+     * Shows a rewarded ad.
      * @param description Description of the ad being shown. Ex: 'ReviveAndContinue'.
      * @param beforeAd Callback before the ad is shown. Pause the game here.
      * @param afterAd Callback after the ad is shown.
      * @param adDismissed Callback when the player cancelled the rewarded ad before it finished. Do not reward the player.
      * @param adViewed Callback when the player viewed the rewarded ad successfully. Reward the player.
      */
-    static requestRewarded(description: string, beforeAd: Function, afterAd: Function, adDismissed: Function,
-                           adViewed: Function): void;
+    static showRewarded(description: string, beforeAd: Function, afterAd: Function, adDismissed: Function,
+                        adViewed: Function): void;
 
     /**
-     * Calls for rewarded ad.
+     * Shows a rewarded ad.
      * @param description Description of the ad being shown. Ex: 'ReviveAndContinue'.
      * @param beforeAd Callback before the ad is shown. Pause the game here.
      * @param afterAd Callback after the ad is shown.
@@ -119,8 +124,8 @@ export class Wortal {
      * @param adBreakDone Callback when the adBreak has completed. Resume the game here.
      * @param noShow Callback when the ad is timed out or not served. Resume the game here.
      */
-    static requestRewarded(description: string, beforeAd: Function, afterAd: Function, adDismissed: Function,
-                           adViewed: Function, beforeReward?: Function, adBreakDone?: Function, noShow?: Function) {
+    static showRewarded(description: string, beforeAd: Function, afterAd: Function, adDismissed: Function,
+                        adViewed: Function, beforeReward?: Function, adBreakDone?: Function, noShow?: Function) {
 
         //TODO: handle beforeReward args
 
@@ -191,7 +196,7 @@ export class Wortal {
         });
     }
 
-    private static GetPlatform(): Platform {
+    private static getPlatform(): Platform {
         let platform = (window as any).getWortalPlatform();
 
         switch (platform) {
@@ -206,7 +211,7 @@ export class Wortal {
         }
     }
 
-    private static GetLinkAdUnitIds() {
+    private static getLinkAdUnitIds() {
         (window as any).wortalGame.getAdUnitsAsync().then((adUnits) => {
             console.log("Link AdUnit IDs returned: \n" + adUnits);
             this._linkInterstitialId = adUnits[0].id;
