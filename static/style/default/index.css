@@ -16,11 +16,21 @@ p {
     font-size: medium;
 }
 
+pre {
+    background-color: #000000;
+    font-family: "Noto Mono", monospace;
+    font-size: small;
+    color: aquamarine;
+    margin-left: 10px;
+    padding: 10px;
+}
+
 code {
     background-color: #000000;
     font-family: "Noto Mono", monospace;
-    font-size: smaller;
+    font-size: small;
     color: aquamarine;
+    padding: 2px;
 }
 
 .container {
