@@ -4,14 +4,13 @@ Cocos Creator Extension for the Wortal SDK to deploy games on the Digital Will H
 
 ## Installation
 
-- Install the extension from the <a href="https://notyet.sry">Cocos Store</a>.
-- Download the extension from <a href="https://alsonothappening.lol">here</a>.
+- Install the extension from the Cocos Store.
 
 ## Enable Extension
 
 - Open the Extension Manager
 - Select the Project tab
-- Ensure `wortal` is enabled
+- Ensure `wortal-sdk` is enabled
 
 ## Using Wortal SDK
 
@@ -25,6 +24,10 @@ You will need to import the `Wortal` class wherever you intend to call for ads.
 
 ```typescript
 import { Placement, Wortal } from '../wortal-api/Wortal';
+
+start() {
+    Wortal.init();
+}
 ```
 
 ### Interstitial Ads
@@ -35,19 +38,26 @@ Calling for interstitial ads is simple and can be done with one line of code:
 Wortal.showInterstitial(type, description, beforeAdCallback, afterAdCallback);
 
 // Example:
-Wortal.showInterstitial(Placement.NEXT, 'NextLevel', pauseGame, resumeGame);
+levelDone() {
+    Wortal.showInterstitial(Placement.NEXT, 'NextLevel', pauseGame, resumeGame);
+}
 ```
 
 ### Rewarded Ads
 
-Calling for rewarded ads is similar to interstitials, but with more callbacks:
+Calling for rewarded ads is similar to interstitial ads, but with a slightly different signature:
 
 ```typescript
 Wortal.showRewarded(description, beforeAdCallback, afterAdCallback, adDismissedCallback, adViewedCallback);
 
 // Example:
-Wortal.showRewarded('ReviveAndContinue', pauseGame, resumeGame, noReward, rewardPlayer);
+playerDied() {
+    Wortal.showRewarded('ReviveAndContinue', pauseGame, resumeGame, endLevel, revivePlayer);
+}
 ```
 
+NOTE: Players should only be rewarded in the `adViewed` callback.
+
 ## Building
-To use the <b>WortalSDK</b> in your game, you must build with the <b>web-mobile</b> template.
+To use the <b>WortalSDK</b> in your game, you must build with the <b>web-mobile</b> template.  This is included in the
+extension and handles all the necessary setup.
