@@ -1,54 +1,13 @@
 <div class="container">
-    <div class="bar">
-        <br/>
-        <h1 id="app"> Wortal SDK </h1>
+    <div class="info">
+        <h2 id="app"> Wortal SDK </h2>
+        <div class="bar"></div>
+        <p>
+            v1.0.4
+            <br/>
+            <a href="https://html5gameportal.com/register-developer/">Register Developer Account</a>
+            <br/>
+            <a href="mailto:support@digitalwill.co.jp">support@digitalwill.co.jp</a>
+        </p>
     </div>
-    <h2> Installation </h2>
-    <p>
-        Once you have enabled the <b>wortal-sdk</b> extension, all the required files
-        are added to your project. You can then call the <b>WortalSDK</b> in your game code via the <code>Wortal</code> class.
-    </p>
-    <h2> Initialization </h2>
-    <p>
-        You should call <code>Wortal.init()</code> when your game loads. If this is not called, it will be called automatically the
-        first time you call for an ad. In this case it is possible for the first ad call to be skipped if the SDK has not
-        finished initializing.
-    </p>
-    <pre>
-// Example:
-import { Placement, Wortal } from '../wortal-api/Wortal';
-
-start() {
-    Wortal.init();
-}</pre>
-    <h2> Interstitial Ads </h2>
-    <p>
-        Calling for interstitial ads is simple and can be done with one line of code:
-    </p>
-    <pre>
-Wortal.showInterstitial(type, description, beforeAdCallback, afterAdCallback);
-
-// Example:
-levelDone() {
-    Wortal.showInterstitial(Placement.NEXT, 'NextLevel', pauseGame, resumeGame);
-}</pre>
-    <h2> Rewarded Ads </h2>
-    <p>
-        Calling for rewarded ads is similar to interstitial ads, but with a slightly different signature:
-    </p>
-    <pre>
-Wortal.showRewarded(description, beforeAdCallback, afterAdCallback, adDismissedCallback, adViewedCallback);
-
-// Example:
-playerDied() {
-    Wortal.showRewarded('ReviveAndContinue', pauseGame, resumeGame, noReward, rewardPlayer);
-} </pre>
-    <p>
-        <ui-icon value="info"></ui-icon> NOTE: Players should only be rewarded in the <code>adViewedCallback</code>.
-    </p>
-    <h2> Build </h2>
-    <p>
-        To use the <b>WortalSDK</b> in your game, you must build with the <b>web-mobile</b> template. This is included
-        in the extension and handles all the necessary setup.
-    </p>
 </div>
