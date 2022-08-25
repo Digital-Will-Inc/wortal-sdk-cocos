@@ -1,58 +1,38 @@
 #app {
     color: var(--color-normal-contrast-weakest);
-    margin: auto;
-    width: 180px;
 }
 
-div {
-    background-color: #111111;
-    border: 1px solid #000000;
-    color: white;
+h2 {
+    margin: 5px 0px 5px 0px;
+    font-size: 2em;
 }
 
-p {
-    margin:auto;
-    padding: 10px;
-    font-size: medium;
+a, a:visited {
+   color: cadetblue;
 }
 
-pre {
-    background-color: #000000;
-    font-family: "Noto Mono", monospace;
-    font-size: small;
+a:hover {
     color: aquamarine;
-    margin-left: 10px;
-    padding: 10px;
-}
-
-code {
-    background-color: #000000;
-    font-family: "Noto Mono", monospace;
-    font-size: small;
-    color: aquamarine;
-    padding: 2px;
 }
 
 .container {
     background-color: #333333;
     height: 100%;
+    width: 100%;
     overflow: scroll;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info {
+    font-size: 1.5em;
+    font-family: "Noto Sans", sans-serif;
+    line-height: 200%;
 }
 
 .bar {
-    background-color: #111111;
-    height: 64px;
+    background-color: #000000;
+    height: 3px;
     width: 100%;
-    color: white;
-}
-
-.infobox-header {
-    background-color: #111111;
-    height: 30px;
-    font-size: large;
-}
-
-.infobox {
-    margin: 10px;
-    font-size: medium
 }

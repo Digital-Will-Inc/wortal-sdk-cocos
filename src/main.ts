@@ -25,6 +25,13 @@ export const load: BuildPlugin.load = () => {
     log("Detected editor version: " + editor);
 
     switch (editor) {
+        case "3.0.0":
+        case "3.0.1":
+        case "3.1.0":
+        case "3.1.1":
+        case "3.1.2":
+        case "3.2.0":
+        case "3.2.1":
         case "3.3.0":
         case "3.3.1":
         case "3.3.2":
