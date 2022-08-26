@@ -61,3 +61,15 @@ NOTE: Players should only be rewarded in the `adViewed` callback.
 ## Building
 To use the <b>WortalSDK</b> in your game, you must build with the <b>web-mobile</b> template.  This is included in the
 extension and handles all the necessary setup.
+
+## Upgrading the Extension
+The extension will overwrite any of its existing assets when loaded with the new versions, if any changes
+were made to these assets it is <b>strongly recommended</b> you move them to a different directory before starting this process
+to prevent losing the changes.
+
+To upgrade the extension follow these steps:
+- Open the Extension Manager
+- Select the Project tab
+- Remove `wortal-sdk`
+- Wait for the Cocos notification that the removal was completed
+- Add the new version of the `wortal-sdk`

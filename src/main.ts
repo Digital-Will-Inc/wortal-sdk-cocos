@@ -41,7 +41,7 @@ export const load: BuildPlugin.load = () => {
         case "3.5.0":
         case "3.5.1":
         case "3.5.2":
-            version = "3.3";
+            version = "3.0";
             break;
         case "3.6.0":
             version = "3.6";
@@ -71,11 +71,10 @@ export const load: BuildPlugin.load = () => {
 
     log("Copying assets..")
     assets.forEach((value: { src: string, dest: string }) => {
-        if (pathExistsSync(value.dest) == false) {
-            copySync(value.src, value.dest);
-        } else {
-            log("Skipping asset: ", value.dest);
+        if (pathExistsSync(value.dest) === true) {
+            log("Overwriting asset: ", value.dest);
         }
+        copySync(value.src, value.dest);
     });
     log("Asset copying complete.")
 };
