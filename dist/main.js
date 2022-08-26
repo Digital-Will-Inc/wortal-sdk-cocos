@@ -40,7 +40,7 @@ exports.load = () => {
         case "3.5.0":
         case "3.5.1":
         case "3.5.2":
-            version = "3.3";
+            version = "3.0";
             break;
         case "3.6.0":
             version = "3.6";
@@ -67,12 +67,10 @@ exports.load = () => {
     ];
     log("Copying assets..");
     assets.forEach((value) => {
-        if (fs_extra_1.pathExistsSync(value.dest) == false) {
-            fs_extra_1.copySync(value.src, value.dest);
+        if (fs_extra_1.pathExistsSync(value.dest) === true) {
+            log("Overwriting asset: ", value.dest);
         }
-        else {
-            log("Skipping asset: ", value.dest);
-        }
+        fs_extra_1.copySync(value.src, value.dest);
     });
     log("Asset copying complete.");
 };
