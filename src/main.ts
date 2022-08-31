@@ -1,5 +1,6 @@
 import {BuildPlugin} from '../@types';
 import {copySync, pathExistsSync} from 'fs-extra';
+import {compare} from 'compare-versions';
 import path from 'path';
 
 const PACKAGE_NAME = 'wortal-sdk';
@@ -19,36 +20,20 @@ export const load: BuildPlugin.load = () => {
     const build_dir = "build-templates";
     const bridge_dir = "wortal-bridge";
     const bridge_dest = "web-mobile/assets/js";
+    const demo_dir = "wortal-demo";
     let version = "";
     let editor = Editor.App.version;
 
     log("Detected editor version: " + editor);
 
-    switch (editor) {
-        case "3.0.0":
-        case "3.0.1":
-        case "3.1.0":
-        case "3.1.1":
-        case "3.1.2":
-        case "3.2.0":
-        case "3.2.1":
-        case "3.3.0":
-        case "3.3.1":
-        case "3.3.2":
-        case "3.4.0":
-        case "3.4.1":
-        case "3.4.2":
-        case "3.5.0":
-        case "3.5.1":
-        case "3.5.2":
-            version = "3.0";
-            break;
-        case "3.6.0":
-            version = "3.6";
-            break;
-        default:
-            error("Version not supported: " + editor);
-            break;
+    // Versions 3.0.0 - 3.5.2 should use the 3.0 templates. 3.6+ uses the 3.6 template.
+    // This is due to major changes in the build template starting in 3.6.0.
+    if (compare(editor, '3.0.0', '>=') && compare(editor, '3.5.2', '<=')) {
+        version = "3.0";
+    } else if (compare(editor, '3.6.0', '>=')) {
+        version = "3.6";
+    } else {
+        error("Version not supported: " + editor);
     }
 
     const static_templates = path.join(Editor.Project.path, "extensions/" + PACKAGE_NAME + "/templates/");
@@ -66,6 +51,10 @@ export const load: BuildPlugin.load = () => {
         {
             src: path.join(static_templates, bridge_dir),
             dest: path.join(project_path, build_dir, bridge_dest)
+        },
+        {
+            src: path.join(static_templates, demo_dir),
+            dest: path.join(assets_dir, demo_dir)
         }
     ];
 
@@ -81,10 +70,5 @@ export const load: BuildPlugin.load = () => {
 
 export const unload: BuildPlugin.Unload = () => {
     console.log("[Wortal] Extension disabled.");
-};
-
-export const methods: { [key: string]: (...any: any) => any } = {
-    openPanel() {
-        Editor.Panel.open(PACKAGE_NAME);
-    },
+    //TODO: safely remove assets that were copied into project
 };
