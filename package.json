@@ -1,6 +1,6 @@
 {
     "package_version": 2,
-    "version": "1.0.5",
+    "version": "1.0.6",
     "name": "wortal-sdk",
     "title": "i18n:wortal-sdk.title",
     "description": "i18n:wortal-sdk.description",
@@ -10,37 +10,8 @@
     "dependencies": {
         "@types/fs-extra": "^5.0.4",
         "@types/node": "^14.5.2",
+        "compare-versions": "^5.0.1",
         "fs-extra": "^10.0.0"
-    },
-    "panels": {
-        "default": {
-            "title": "i18n:wortal-sdk.title",
-            "type": "dockable",
-            "main": "dist/panels/default",
-            "icon": "./static/img/icon.png",
-            "size": {
-                "min-width": 400,
-                "min-height": 300,
-                "width": 400,
-                "height": 300
-            }
-        }
-    },
-    "contributions": {
-        "menu": [
-            {
-                "path": "i18n:menu.panel/Wortal",
-                "label": "i18n:wortal-sdk.panel_info",
-                "message": "open-panel"
-            }
-        ],
-        "messages": {
-            "open-panel": {
-                "methods": [
-                    "openPanel"
-                ]
-            }
-        }
     },
     "scripts": {
         "build": "tsc -b",
