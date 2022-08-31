@@ -3,6 +3,7 @@ export class Wortal {
     private static _linkInterstitialId: string;
     private static _linkRewardedId: string;
     private static _isInit: boolean = false;
+    private static _isAdShowing: boolean = false;
 
     /**
      * Initializes the Wortal extension. It is necessary to call this before using the Wortal SDK.
@@ -55,6 +56,11 @@ export class Wortal {
             Wortal.init();
         }
 
+        if (this._isAdShowing) {
+            console.warn("[Wortal] Ad already showing, wait for it to complete before calling again.");
+            return;
+        }
+
         let placement: string = type;
         let adUnit: string = "";
         let adDone: boolean = false;
@@ -67,6 +73,7 @@ export class Wortal {
             }
         }
 
+        this._isAdShowing = true;
         (window as any).triggerWortalAd(placement, adUnit, description, {
             beforeAd: () => {
                 console.log("[Wortal] BeforeAd");
@@ -76,6 +83,7 @@ export class Wortal {
                 console.log("[Wortal] AfterAd");
                 afterAd();
                 adDone = true;
+                this._isAdShowing = false;
             },
             adBreakDone: () => {
                 console.log("[Wortal] AdBreakDone");
@@ -133,6 +141,11 @@ export class Wortal {
             Wortal.init();
         }
 
+        if (this._isAdShowing) {
+            console.warn("[Wortal] Ad already showing, wait for it to complete before calling again.");
+            return;
+        }
+
         let placement: string = Placement.REWARD;
         let adUnit: string = "";
         let adDone: boolean = false;
@@ -145,6 +158,7 @@ export class Wortal {
             }
         }
 
+        this._isAdShowing = true;
         (window as any).triggerWortalAd(placement, adUnit, description, {
             beforeAd: () => {
                 console.log("[Wortal] BeforeAd");
@@ -154,6 +168,7 @@ export class Wortal {
                 console.log("[Wortal] AfterAd");
                 afterAd();
                 adDone = true;
+                this._isAdShowing = false;
             },
             adDismissed: () => {
                 console.log("[Wortal] AdDismissed");
