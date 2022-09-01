@@ -3,7 +3,7 @@ import {copySync, pathExistsSync} from 'fs-extra';
 import {compare} from 'compare-versions';
 import path from 'path';
 
-const PACKAGE_NAME = 'wortal-sdk';
+const PACKAGE_NAME = 'Wortal';
 
 export const load: BuildPlugin.load = () => {
     function log(...arg: any[]) {
