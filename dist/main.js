@@ -7,7 +7,7 @@ exports.unload = exports.load = void 0;
 const fs_extra_1 = require("fs-extra");
 const compare_versions_1 = require("compare-versions");
 const path_1 = __importDefault(require("path"));
-const PACKAGE_NAME = 'wortal-sdk';
+const PACKAGE_NAME = 'Wortal';
 exports.load = () => {
     function log(...arg) {
         return console.log(`[${PACKAGE_NAME}] `, ...arg);
