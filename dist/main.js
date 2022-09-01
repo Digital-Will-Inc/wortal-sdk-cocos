@@ -7,7 +7,8 @@ exports.unload = exports.load = void 0;
 const fs_extra_1 = require("fs-extra");
 const compare_versions_1 = require("compare-versions");
 const path_1 = __importDefault(require("path"));
-const PACKAGE_NAME = 'Wortal';
+const fs_1 = require("fs");
+let PACKAGE_NAME = 'Wortal';
 exports.load = () => {
     function log(...arg) {
         return console.log(`[${PACKAGE_NAME}] `, ...arg);
@@ -24,6 +25,10 @@ exports.load = () => {
     const demo_dir = "wortal-demo";
     let version = "";
     let editor = Editor.App.version;
+    if (!fs_1.existsSync(path_1.default.join(project_path, "extensions/" + PACKAGE_NAME))) {
+        log("Package not downloaded from Cocos Store, changing extension directory..");
+        PACKAGE_NAME = "wortal-sdk";
+    }
     log("Detected editor version: " + editor);
     // Versions 3.0.0 - 3.5.2 should use the 3.0 templates. 3.6+ uses the 3.6 template.
     // This is due to major changes in the build template starting in 3.6.0.
@@ -36,7 +41,7 @@ exports.load = () => {
     else {
         error("Version not supported: " + editor);
     }
-    const static_templates = path_1.default.join(Editor.Project.path, "extensions/" + PACKAGE_NAME + "/templates/");
+    const static_templates = path_1.default.join(project_path, "extensions/" + PACKAGE_NAME + "/templates/");
     const versioned_templates = path_1.default.join(static_templates + version + "/");
     const assets = [
         {
