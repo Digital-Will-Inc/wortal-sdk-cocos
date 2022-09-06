@@ -89,10 +89,12 @@ export class Wortal {
                 console.log("[Wortal] AdBreakDone");
                 if (adBreakDone) {
                     adBreakDone()
+                    this._isAdShowing = false;
                 } else {
                     if (!adDone) {
                         adDone = true;
                         afterAd();
+                        this._isAdShowing = false;
                     }
                 }
             },
@@ -100,10 +102,12 @@ export class Wortal {
                 console.log("[Wortal] NoShow");
                 if (noShow) {
                     noShow();
+                    this._isAdShowing = false;
                 } else {
                     if (!adDone) {
                         adDone = true;
                         afterAd();
+                        this._isAdShowing = false;
                     }
                 }
             },
@@ -190,10 +194,12 @@ export class Wortal {
                 console.log("[Wortal] AdBreakDone");
                 if (adBreakDone) {
                     adBreakDone();
+                    this._isAdShowing = false;
                 } else {
                     if (!adDone) {
                         adDone = true;
                         afterAd();
+                        this._isAdShowing = false;
                     }
                 }
             },
@@ -201,10 +207,12 @@ export class Wortal {
                 console.log("[Wortal] NoShow");
                 if (noShow) {
                     noShow();
+                    this._isAdShowing = false;
                 } else {
                     if (!adDone) {
                         adDone = true;
                         afterAd();
+                        this._isAdShowing = false;
                     }
                 }
             },
