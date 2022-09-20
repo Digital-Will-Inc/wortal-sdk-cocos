@@ -139,8 +139,6 @@ export class Wortal {
     static showRewarded(description: string, beforeAd: Function, afterAd: Function, adDismissed: Function,
                         adViewed: Function, beforeReward?: Function, adBreakDone?: Function, noShow?: Function) {
 
-        //TODO: handle beforeReward args
-
         if (!Wortal._isInit) {
             Wortal.init();
         }
@@ -182,12 +180,12 @@ export class Wortal {
                 console.log("[Wortal] AdViewed");
                 adViewed();
             },
-            beforeReward: (showAdFn) => {
+            beforeReward: function (showAdFn) {
                 console.log("[Wortal] BeforeReward");
                 if (beforeReward) {
                     beforeReward(showAdFn);
                 } else {
-                    //TODO: can we auto trigger the rewarded ad here?
+                    showAdFn();
                 }
             },
             adBreakDone: () => {
