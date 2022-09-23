@@ -30,7 +30,7 @@ Only after being approved should you install the Wortal extension into your game
 
 ### Initialize Wortal
 
-You should call `Wortal.init()` when your game loads. If this is not called, it will be called automatically the
+You should call `Wortal.init()` when your game first loads. If this is not called, it will be called automatically the
 first time you call for an ad. In this case it is possible for the first ad call to be skipped if the SDK has not
 finished initializing.
 
@@ -72,6 +72,43 @@ playerDied() {
 
 NOTE: Players should only be rewarded in the `adViewed` callback.
 
+### Analytics
+**DISCLAIMER: No personal data is collected, processed or transmitted from players or games via the Wortal SDK.
+All data is anonymous and compliant with GDPR requirements.**
+
+The Analytics API can be used to track game events that can help better understand how players are interacting with
+the game. This data will be available for viewing in the Wortal dashboard.
+
+```typescript
+// Log an event at the beginning of the level.
+Wortal.logLevelStart('Level1');
+
+// Log an event at the end of the level which will track how long it took the player to finish.
+Wortal.logLevelEnd('Level1', true, '100');
+
+// Log the player’s choice when offered different options. 
+// This can be useful for determining which characters are more popular, or paths are more commonly taken, etc. 
+// This can be a powerful tool for balancing the game and giving the players more of what they enjoy.
+Wortal.logGameChoice('Character', 'Blue');
+
+// Other events:
+Wortal.logLevelUp('Level10');
+Wortal.logScore('52');
+Wortal.logTutorialStart();
+Wortal.logTutorialEnd();
+
+// By default the following events are logged automatically:
+
+// Logged when the SDK is initialized. Sends the name of the game, browser, platform,
+// player's country and starts the game timer.
+logGameStart();
+
+// Logged when the tab/window becomes hidden. Sends the name of the game and the length of play.
+// Due to differences in browsers and devices, this is not enitrely reliable and may not be called
+// before the browser is closed.
+logGameEnd();
+```
+
 ## Building
 To use the <b>WortalSDK</b> in your game, you must build with the <b>web-mobile</b> template.  This is included in the
 extension and handles all the necessary setup.
@@ -93,6 +130,7 @@ To upgrade the extension follow these steps:
 - Select the Project tab
 - Remove `wortal-sdk`
 - Delete the following directories:
+    - assets/resources/wortal
     - assets/wortal-api
     - assets/wortal-demo
     - build-templates
