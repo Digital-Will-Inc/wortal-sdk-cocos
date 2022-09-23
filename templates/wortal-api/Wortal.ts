@@ -1,12 +1,26 @@
+import {WortalUtil} from "./WortalUtil";
+
+/**
+ * API for the Wortal SDK. Calls for ads and analytics are done via this class.
+ */
 export class Wortal {
     private static _platform: Platform;
+    private static _gameName: string;
+    private static _isInit: boolean = false;
+
     private static _linkInterstitialId: string;
     private static _linkRewardedId: string;
-    private static _isInit: boolean = false;
     private static _isAdShowing: boolean = false;
 
+    private static _gameTimer: number = 0;
+    private static _levelTimer: number = 0;
+    private static _levelTimerHandle: number;
+    private static _levelName: string;
+
     /**
-     * Initializes the Wortal extension. It is necessary to call this before using the Wortal SDK.
+     * Initializes the Wortal extension. It is strongly recommended to call this before using the Wortal SDK. Wortal
+     * SDK will initialize itself on the first ad call if not already done, but this may cause the first ad to be
+     * skipped while the initialization completes.
      */
     static init() {
         if (Wortal._isInit) {
@@ -14,15 +28,28 @@ export class Wortal {
             return;
         }
 
+        Wortal._gameName = document.title;
         Wortal._platform = Wortal.getPlatform();
-        console.log("[Wortal] Platform: " + this._platform);
+        console.log("[Wortal] Platform: " + Wortal._platform);
 
         if (Wortal._platform === Platform.LINK) {
             Wortal.getLinkAdUnitIds();
         }
 
-        console.log("[Wortal] Initialized");
+        window.addEventListener('visibilitychange', () => {
+            if (document.visibilityState == "hidden") {
+                Wortal.logGameEnd();
+            }
+        });
+
+        // We first need to load the intl-data JSON from resources, which happens asynchronously.
+        // After that we can call init and pass in the results from the country check.
+        Wortal.getIntlData()
+            .then(res => Wortal.logGameStart(res))
+            .catch(() => Wortal.logGameStart("Nulltherlands"));
+
         Wortal._isInit = true;
+        console.log("[Wortal] Initialized");
     }
 
     /**
@@ -48,15 +75,16 @@ export class Wortal {
 
         // Take care when passing adBreakDone and noShow callbacks, as they will typically be called together alongside afterAd.
         // Ex: Ad shows successfully, afterAd and adBreakDone are called.
-        // Ex: Ad does not fill, adBreakDone and noShow are called.
+        // Ex: Ad does not fill, noShow and adBreakDone are called.
         // This can lead to duplicating calls and unintended consequences if these callbacks are used together.
         // Ex: Resume game on both afterAd and adBreakDone. Resume is called twice.
 
         if (!Wortal._isInit) {
+            console.warn("[Wortal] SDK not initialized before ad call, ad may be skipped.");
             Wortal.init();
         }
 
-        if (this._isAdShowing) {
+        if (Wortal._isAdShowing) {
             console.warn("[Wortal] Ad already showing, wait for it to complete before calling again.");
             return;
         }
@@ -73,7 +101,7 @@ export class Wortal {
             }
         }
 
-        this._isAdShowing = true;
+        Wortal._isAdShowing = true;
         (window as any).triggerWortalAd(placement, adUnit, description, {
             beforeAd: () => {
                 console.log("[Wortal] BeforeAd");
@@ -83,18 +111,18 @@ export class Wortal {
                 console.log("[Wortal] AfterAd");
                 afterAd();
                 adDone = true;
-                this._isAdShowing = false;
+                Wortal._isAdShowing = false;
             },
             adBreakDone: () => {
                 console.log("[Wortal] AdBreakDone");
                 if (adBreakDone) {
                     adBreakDone()
-                    this._isAdShowing = false;
+                    Wortal._isAdShowing = false;
                 } else {
                     if (!adDone) {
                         adDone = true;
                         afterAd();
-                        this._isAdShowing = false;
+                        Wortal._isAdShowing = false;
                     }
                 }
             },
@@ -102,12 +130,26 @@ export class Wortal {
                 console.log("[Wortal] NoShow");
                 if (noShow) {
                     noShow();
-                    this._isAdShowing = false;
+                    Wortal._isAdShowing = false;
                 } else {
                     if (!adDone) {
                         adDone = true;
                         afterAd();
-                        this._isAdShowing = false;
+                        Wortal._isAdShowing = false;
+                    }
+                }
+            },
+            // This is needed for Link platform as the callback has not yet been changed to noShow.
+            noBreak: () => {
+                console.log("[Wortal] NoBreak");
+                if (noShow) {
+                    noShow();
+                    Wortal._isAdShowing = false;
+                } else {
+                    if (!adDone) {
+                        adDone = true;
+                        afterAd();
+                        Wortal._isAdShowing = false;
                     }
                 }
             },
@@ -140,10 +182,11 @@ export class Wortal {
                         adViewed: Function, beforeReward?: Function, adBreakDone?: Function, noShow?: Function) {
 
         if (!Wortal._isInit) {
+            console.warn("[Wortal] SDK not initialized before ad call, ad may be skipped.");
             Wortal.init();
         }
 
-        if (this._isAdShowing) {
+        if (Wortal._isAdShowing) {
             console.warn("[Wortal] Ad already showing, wait for it to complete before calling again.");
             return;
         }
@@ -160,17 +203,17 @@ export class Wortal {
             }
         }
 
-        this._isAdShowing = true;
+        Wortal._isAdShowing = true;
         (window as any).triggerWortalAd(placement, adUnit, description, {
             beforeAd: () => {
                 console.log("[Wortal] BeforeAd");
-                if (beforeAd) beforeAd();
+                beforeAd();
             },
             afterAd: () => {
                 console.log("[Wortal] AfterAd");
                 afterAd();
                 adDone = true;
-                this._isAdShowing = false;
+                Wortal._isAdShowing = false;
             },
             adDismissed: () => {
                 console.log("[Wortal] AdDismissed");
@@ -192,12 +235,12 @@ export class Wortal {
                 console.log("[Wortal] AdBreakDone");
                 if (adBreakDone) {
                     adBreakDone();
-                    this._isAdShowing = false;
+                    Wortal._isAdShowing = false;
                 } else {
                     if (!adDone) {
                         adDone = true;
                         afterAd();
-                        this._isAdShowing = false;
+                        Wortal._isAdShowing = false;
                     }
                 }
             },
@@ -205,21 +248,182 @@ export class Wortal {
                 console.log("[Wortal] NoShow");
                 if (noShow) {
                     noShow();
-                    this._isAdShowing = false;
+                    Wortal._isAdShowing = false;
                 } else {
                     if (!adDone) {
                         adDone = true;
                         afterAd();
-                        this._isAdShowing = false;
+                        Wortal._isAdShowing = false;
+                    }
+                }
+            },
+            // This is needed for Link platform as the callback has not yet been changed to noShow.
+            noBreak: () => {
+                console.log("[Wortal] NoBreak");
+                if (noShow) {
+                    noShow();
+                    Wortal._isAdShowing = false;
+                } else {
+                    if (!adDone) {
+                        adDone = true;
+                        afterAd();
+                        Wortal._isAdShowing = false;
                     }
                 }
             },
         });
     }
 
+    /**
+     * Logs an event when the player begins the tutorial. Starts a timer that tracks how long the player spends in this
+     * level. Call logTutorialEnd() to get the value of the timer in the event.
+     */
+    static logTutorialStart() {
+        Wortal.logLevelStart("Tutorial");
+    }
+
+    /**
+     * Logs an event when the player finishes the tutorial. This can be used to determine how many players complete
+     * the tutorial vs skipping.
+     */
+    static logTutorialEnd() {
+        Wortal.logLevelEnd("Tutorial");
+    }
+
+    /**
+     * Logs an event for the player starting a level. This will trigger a level timer with the given level name. If
+     * logLevelEnd() is called with the same level name, it will record the time it took the player to finish the level.
+     * @param level Level the player started.
+     * @return ID of the timer being used to track the level time.
+     */
+    static logLevelStart(level: string) {
+        if (Wortal._levelTimerHandle != null) {
+            clearInterval(Wortal._levelTimerHandle);
+            Wortal._levelTimerHandle = null;
+        }
+        Wortal._levelName = level;
+        Wortal._levelTimer = 0;
+        Wortal._levelTimerHandle = setInterval(() => Wortal._levelTimer += 1, 1000);
+        Wortal.event("LevelStart", {
+            game: Wortal._gameName,
+            level: level,
+        });
+    }
+
+    /**
+     * Logs an event for the player ending a level. Also logs how long it took the player to complete the level if
+     * logLevelStart() was called before this with the same level variable.
+     * @param level Level the player played.
+     * @param wasCompleted Did the player complete the level or not.
+     * @param score Score the player achieved in the level.
+     */
+    static logLevelEnd(level: string, wasCompleted: boolean = true, score: string = '0') {
+        if (Wortal._levelTimerHandle != null) {
+            clearInterval(Wortal._levelTimerHandle);
+            Wortal._levelTimerHandle = null;
+        }
+        if (Wortal._levelName != level) {
+            Wortal._levelTimer = 0;
+        }
+        Wortal.event("LevelEnd", {
+            game: Wortal._gameName,
+            level: level,
+            time: Wortal._levelTimer,
+            complete: wasCompleted,
+            score: score,
+        });
+        Wortal._levelTimer = 0;
+    }
+
+    /**
+     * Logs an event when the player levels up.
+     * @param level Level the player achieved.
+     */
+    static logLevelUp(level: string) {
+        Wortal.event("LevelUp", {
+            game: Wortal._gameName,
+            level: level,
+        });
+    }
+
+    /**
+     * Logs the players score. This can be used to record a high score or track scores across different points in the
+     * game to determine difficulty level or imbalances.
+     * @param score Score the player achieved.
+     */
+    static logScore(score: string) {
+        Wortal.event("PostScore", {
+            game: Wortal._gameName,
+            score: score,
+        });
+    }
+
+    /**
+     * Logs a choice the player makes in the game. This can be useful for determining which characters are more
+     * popular, which paths are more commonly taken, etc. This can be a powerful tool for balancing the game and
+     * giving the players more of what they enjoy.
+     * @param decision Decision the player was faced with. Ex: Character
+     * @param choice Choice the player made. Ex: Blue Dog
+     */
+    static logGameChoice(decision: string, choice: string) {
+        Wortal.event("GameChoice", {
+            game: Wortal._gameName,
+            decision: decision,
+            choice: choice,
+        });
+    }
+
+    private static logGameStart(country) {
+        const platform = Wortal._platform;
+        const browser = navigator.userAgent;
+        Wortal.event("GameStart", {
+            game: Wortal._gameName,
+            platform: platform,
+            browser: browser,
+            country: country,
+        });
+        setInterval(function () {
+            if (document.visibilityState != "hidden") {
+                Wortal._gameTimer += 1;
+            }
+        }, 1000);
+    }
+
+    private static logGameEnd() {
+        Wortal.event("GameEnd", {
+            game: Wortal._gameName,
+            timePlayed: Wortal._gameTimer,
+        });
+    }
+
+    private static getIntlData(): Promise<string> {
+        return WortalUtil.LoadIntlData()
+            .then(res => Wortal.getPlayerCountry(res))
+            .catch(() => Wortal.getPlayerCountry(null));
+    }
+
+    // This uses the time zone setting of the player to determine their country.
+    // We do this to avoid collecting any personal data on the player for GDPR compliance.
+    // The location is very coarse and easily spoofed so nothing here can identify the player.
+    private static getPlayerCountry(data): string {
+        if (data == null) {
+            return "Nulltherlands";
+        }
+        const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const arr = zone.split("/");
+        const city = arr[arr.length - 1];
+        return data[city];
+    }
+
+    private static event(name: string, features: object): void {
+        let request = new XMLHttpRequest();
+        request.open("POST", "https://wombat.digitalwill.co.jp/wortal/events");
+        request.setRequestHeader("Content-Type", "application/json");
+        request.send(JSON.stringify({ name, features }));
+    }
+
     private static getPlatform(): Platform {
         let platform = (window as any).getWortalPlatform();
-
         switch (platform) {
             case 'wortal':
                 return Platform.WORTAL;
@@ -235,8 +439,8 @@ export class Wortal {
     private static getLinkAdUnitIds() {
         (window as any).wortalGame.getAdUnitsAsync().then((adUnits) => {
             console.log("Link AdUnit IDs returned: \n" + adUnits);
-            this._linkInterstitialId = adUnits[0].id;
-            this._linkRewardedId = adUnits[1].id;
+            Wortal._linkInterstitialId = adUnits[0].id;
+            Wortal._linkRewardedId = adUnits[1].id;
         });
     }
 }

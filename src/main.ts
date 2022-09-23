@@ -4,17 +4,7 @@ import {compare} from 'compare-versions';
 import path from 'path';
 import {existsSync} from "fs";
 
-let PACKAGE_NAME = 'Wortal';
-
 export const load: BuildPlugin.load = () => {
-    function log(...arg: any[]) {
-        return console.log(`[${PACKAGE_NAME}] `, ...arg);
-    }
-
-    function error(...arg: any[]) {
-        return console.error(`[${PACKAGE_NAME}] `, ...arg);
-    }
-
     const project_path = Editor.Project.path;
     const assets_dir = path.join(project_path, "assets");
     const api_dir = "wortal-api";
@@ -22,24 +12,26 @@ export const load: BuildPlugin.load = () => {
     const bridge_dir = "wortal-bridge";
     const bridge_dest = "web-mobile/assets/js";
     const demo_dir = "wortal-demo";
+    const resources_dir = "resources/wortal";
+
+    let PACKAGE_NAME = "Wortal";
     let version = "";
     let editor = Editor.App.version;
-
-    if (!existsSync(path.join(project_path, "extensions/" + PACKAGE_NAME))) {
-        log("Package not downloaded from Cocos Store, changing extension directory..");
-        PACKAGE_NAME = "wortal-sdk";
-    }
-
     log("Detected editor version: " + editor);
 
     // Versions 3.0.0 - 3.5.2 should use the 3.0 templates. 3.6+ uses the 3.6 template.
     // This is due to major changes in the build template starting in 3.6.0.
-    if (compare(editor, '3.0.0', '>=') && compare(editor, '3.5.2', '<=')) {
+    if (compare(editor, "3.0.0", ">=") && compare(editor, "3.5.2", "<=")) {
         version = "3.0";
-    } else if (compare(editor, '3.6.0', '>=')) {
+    } else if (compare(editor, "3.6.0", ">=")) {
         version = "3.6";
     } else {
         error("Version not supported: " + editor);
+    }
+
+    if (!existsSync(path.join(project_path, "extensions/" + PACKAGE_NAME))) {
+        log("Package not downloaded from Cocos Store, changing extension directory..");
+        PACKAGE_NAME = "wortal-sdk";
     }
 
     const static_templates = path.join(project_path, "extensions/" + PACKAGE_NAME + "/templates/");
@@ -61,17 +53,29 @@ export const load: BuildPlugin.load = () => {
         {
             src: path.join(static_templates, demo_dir),
             dest: path.join(assets_dir, demo_dir)
+        },
+        {
+            src: path.join(static_templates, resources_dir),
+            dest: path.join(assets_dir, resources_dir)
         }
     ];
 
-    log("Copying assets..")
+    log("Copying assets..");
     assets.forEach((value: { src: string, dest: string }) => {
         if (pathExistsSync(value.dest) === true) {
             log("Overwriting asset: ", value.dest);
         }
         copySync(value.src, value.dest);
     });
-    log("Asset copying complete.")
+    log("Asset copying complete.");
+
+    function log(...arg: any[]) {
+        return console.log(`[${PACKAGE_NAME}] `, ...arg);
+    }
+
+    function error(...arg: any[]) {
+        return console.error(`[${PACKAGE_NAME}] `, ...arg);
+    }
 };
 
 export const unload: BuildPlugin.Unload = () => {
