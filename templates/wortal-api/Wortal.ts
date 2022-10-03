@@ -1,18 +1,22 @@
 import {WortalUtil} from "./WortalUtil";
 
 /**
- * API for the Wortal SDK. Calls for ads and analytics are done via this class.
+ * API for the Wortal SDK. Calls for ads and analytics are made via this class.
  */
 export class Wortal {
+
+    // Config
     private static _platform: Platform;
     private static _gameName: string;
     private static _isInit: boolean = false;
-    private static _isAdBlocked: boolean = false;
 
+    // Ads
     private static _linkInterstitialId: string;
     private static _linkRewardedId: string;
+    private static _isAdBlocked: boolean = false;
     private static _isAdShowing: boolean = false;
 
+    // Analytics
     private static _gameTimer: number = 0;
     private static _levelTimer: number = 0;
     private static _levelTimerHandle: number;
@@ -29,8 +33,8 @@ export class Wortal {
             return;
         }
 
-        this._isAdBlocked = (window as any).isAdBlocked;
-        console.log("[Wortal] AdBlocker: " + this._isAdBlocked);
+        Wortal._isAdBlocked = (window as any).isAdBlocked;
+        console.log("[Wortal] AdBlocker: " + Wortal._isAdBlocked);
 
         Wortal._gameName = document.title;
         Wortal._platform = Wortal.getPlatform();
@@ -63,25 +67,7 @@ export class Wortal {
      * @param beforeAd Callback before the ad is shown. Pause the game here.
      * @param afterAd Callback after the ad is shown. Resume the game here.
      */
-    static showInterstitial(type: Placement, description: string, beforeAd: Function, afterAd: Function): void;
-
-    /**
-     * Shows an interstitial ad.
-     * @param type Type of ad placement.
-     * @param description Description of the ad placement. Ex: "NextLevel"
-     * @param beforeAd Callback before the ad is shown. Pause the game here.
-     * @param afterAd Callback after the ad is shown. Resume the game here.
-     * @param adBreakDone Callback when the adBreak has completed. Called only on AdSense platform. Will typically be called in conjunction with afterAd or noShow.
-     * @param noShow Callback when the ad is timed out or not served.
-     */
-    static showInterstitial(type: Placement, description: string, beforeAd: Function, afterAd: Function,
-                            adBreakDone?: Function, noShow?: Function) {
-
-        // Take care when passing adBreakDone and noShow callbacks, as they will typically be called together alongside afterAd.
-        // Ex: Ad shows successfully, afterAd and adBreakDone are called.
-        // Ex: Ad does not fill, noShow and adBreakDone are called.
-        // This can lead to duplicating calls and unintended consequences if these callbacks are used together.
-        // Ex: Resume game on both afterAd and adBreakDone. Resume is called twice.
+    static showInterstitial(type: Placement, description: string, beforeAd: Function, afterAd: Function) {
 
         if (!Wortal._isInit) {
             console.warn("[Wortal] SDK not initialized before ad call, ad may be skipped.");
@@ -117,51 +103,30 @@ export class Wortal {
                 console.log("[Wortal] BeforeAd");
                 beforeAd();
             },
+            // We should always receive only one of the following callbacks: afterAd, noShow or noBreak.
+            // They all signal that the ad event is complete and that we should resume the game now.
             afterAd: () => {
                 console.log("[Wortal] AfterAd");
                 afterAd();
                 adDone = true;
                 Wortal._isAdShowing = false;
             },
-            adBreakDone: () => {
-                console.log("[Wortal] AdBreakDone");
-                if (adBreakDone) {
-                    adBreakDone()
-                    Wortal._isAdShowing = false;
-                } else {
-                    if (!adDone) {
-                        adDone = true;
-                        afterAd();
-                        Wortal._isAdShowing = false;
-                    }
-                }
-            },
             noShow: () => {
                 console.log("[Wortal] NoShow");
-                if (noShow) {
-                    noShow();
-                    Wortal._isAdShowing = false;
-                } else {
-                    if (!adDone) {
-                        adDone = true;
-                        afterAd();
-                        Wortal._isAdShowing = false;
-                    }
-                }
+                afterAd();
+                adDone = true;
+                Wortal._isAdShowing = false;
             },
-            // This is needed for Link platform as the callback has not yet been changed to noShow.
             noBreak: () => {
                 console.log("[Wortal] NoBreak");
-                if (noShow) {
-                    noShow();
-                    Wortal._isAdShowing = false;
-                } else {
-                    if (!adDone) {
-                        adDone = true;
-                        afterAd();
-                        Wortal._isAdShowing = false;
-                    }
-                }
+                afterAd();
+                adDone = true;
+                Wortal._isAdShowing = false;
+            },
+            adBreakDone: () => {
+                // This only fires on AdSense. We don't call anything here because it will likely just be
+                // a duplicate of afterAd.
+                console.log("[Wortal] AdBreakDone");
             },
         });
     }
@@ -174,22 +139,7 @@ export class Wortal {
      * @param adDismissed Callback when the player cancelled the rewarded ad before it finished. Do not reward the player.
      * @param adViewed Callback when the player viewed the rewarded ad successfully. Reward the player.
      */
-    static showRewarded(description: string, beforeAd: Function, afterAd: Function, adDismissed: Function,
-                        adViewed: Function): void;
-
-    /**
-     * Shows a rewarded ad.
-     * @param description Description of the ad being shown. Ex: 'ReviveAndContinue'.
-     * @param beforeAd Callback before the ad is shown. Pause the game here.
-     * @param afterAd Callback after the ad is shown.
-     * @param adDismissed Callback when the player cancelled the rewarded ad before it finished. Do not reward the player.
-     * @param adViewed Callback when the player viewed the rewarded ad successfully. Reward the player.
-     * @param beforeReward Callback before showing the rewarded ad. This can trigger a popup giving the player the option to view the ad for a reward.
-     * @param adBreakDone Callback when the adBreak has completed. Resume the game here.
-     * @param noShow Callback when the ad is timed out or not served. Resume the game here.
-     */
-    static showRewarded(description: string, beforeAd: Function, afterAd: Function, adDismissed: Function,
-                        adViewed: Function, beforeReward?: Function, adBreakDone?: Function, noShow?: Function) {
+    static showRewarded(description: string, beforeAd: Function, afterAd: Function, adDismissed: Function, adViewed: Function) {
 
         if (!Wortal._isInit) {
             console.warn("[Wortal] SDK not initialized before ad call, ad may be skipped.");
@@ -225,8 +175,22 @@ export class Wortal {
                 console.log("[Wortal] BeforeAd");
                 beforeAd();
             },
+            // We should always receive only one of the following callbacks: afterAd, noShow or noBreak.
+            // They all signal that the ad event is complete and that we should resume the game now.
             afterAd: () => {
                 console.log("[Wortal] AfterAd");
+                afterAd();
+                adDone = true;
+                Wortal._isAdShowing = false;
+            },
+            noShow: () => {
+                console.log("[Wortal] NoShow");
+                afterAd();
+                adDone = true;
+                Wortal._isAdShowing = false;
+            },
+            noBreak: () => {
+                console.log("[Wortal] NoBreak");
                 afterAd();
                 adDone = true;
                 Wortal._isAdShowing = false;
@@ -240,52 +204,14 @@ export class Wortal {
                 adViewed();
             },
             beforeReward: function (showAdFn) {
+                // This is only called on AdSense, we need to call showAdFn() here to trigger the ad to show.
                 console.log("[Wortal] BeforeReward");
-                if (beforeReward) {
-                    beforeReward(showAdFn);
-                } else {
-                    showAdFn();
-                }
+                showAdFn();
             },
             adBreakDone: () => {
+                // This only fires on AdSense. We don't call anything here because it will likely just be
+                // a duplicate of afterAd.
                 console.log("[Wortal] AdBreakDone");
-                if (adBreakDone) {
-                    adBreakDone();
-                    Wortal._isAdShowing = false;
-                } else {
-                    if (!adDone) {
-                        adDone = true;
-                        afterAd();
-                        Wortal._isAdShowing = false;
-                    }
-                }
-            },
-            noShow: () => {
-                console.log("[Wortal] NoShow");
-                if (noShow) {
-                    noShow();
-                    Wortal._isAdShowing = false;
-                } else {
-                    if (!adDone) {
-                        adDone = true;
-                        afterAd();
-                        Wortal._isAdShowing = false;
-                    }
-                }
-            },
-            // This is needed for Link platform as the callback has not yet been changed to noShow.
-            noBreak: () => {
-                console.log("[Wortal] NoBreak");
-                if (noShow) {
-                    noShow();
-                    Wortal._isAdShowing = false;
-                } else {
-                    if (!adDone) {
-                        adDone = true;
-                        afterAd();
-                        Wortal._isAdShowing = false;
-                    }
-                }
             },
         });
     }
@@ -454,7 +380,7 @@ export class Wortal {
 
     private static getLinkAdUnitIds() {
         (window as any).wortalGame.getAdUnitsAsync().then((adUnits) => {
-            console.log("Link AdUnit IDs returned: \n" + adUnits);
+            console.log("[Wortal] Link AdUnit IDs returned: \n" + adUnits);
             Wortal._linkInterstitialId = adUnits[0].id;
             Wortal._linkRewardedId = adUnits[1].id;
         });
@@ -466,31 +392,19 @@ export class Wortal {
  * https://developers.google.com/ad-placement/docs/placement-types
  */
 export enum Placement {
-    /**
-     * Your game has not loaded its UI and is not playing sound. There can only be one ‘preroll’ placement in your game
-     * for each page load. Preroll ads can only use the adBreakDone callback.
-     */
+    /// Your game has not loaded its UI and is not playing sound. There can only be one ‘preroll’ placement in your game
+    /// for each page load. Preroll ads can only use the adBreakDone callback.
     PREROLL = 'preroll',
-    /**
-     * Your game has loaded, the UI is visible and sound is enabled, the player can interact with the game, but the
-     * game play has not started yet.
-     */
+    /// Your game has loaded, the UI is visible and sound is enabled, the player can interact with the game, but the
+    /// game play has not started yet.
     START = 'start',
-    /**
-     * The player pauses the game.
-     */
+    /// The player pauses the game.
     PAUSE = 'pause',
-    /**
-     * The player navigates to the next level.
-     */
+    /// The player navigates to the next level.
     NEXT = 'next',
-    /**
-     * The player explores options outside of gameplay.
-     */
+    /// The player explores options outside of gameplay.
     BROWSE = 'browse',
-    /**
-     * The player reaches a point in the game where they can be offered a reward.
-     */
+    /// The player reaches a point in the game where they can be offered a reward.
     REWARD = 'reward'
 }
 
