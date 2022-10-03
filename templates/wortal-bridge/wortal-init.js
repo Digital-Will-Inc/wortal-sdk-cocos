@@ -1,22 +1,37 @@
-let init = document.createElement('script');
-init.type = 'text/javascript';
-
+var isAdBlocked = false;
 let platform = window.getWortalPlatform();
 console.log('[Wortal] Platform: ' + platform);
 
-switch (platform) {
-    case 'wortal':
-        init.src = 'assets/js/wortal-init-adsense.js';
-        break;
-    case 'link':
-        init.src = 'assets/js/wortal-init-link.js';
-        break;
-    case 'viber':
-        init.src = 'assets/js/wortal-init-viber.js';
-        break;
-    default:
-        console.log('[Wortal] Platform not supported.');
-        break;
-}
+window.addEventListener("load", () => {
+    window.initWortal(function () {
+        console.log("[Wortal] Initializing..");
+        if (platform === 'link' || platform === 'viber') {
+            _removeLoadingCover();
+            if (window.wortalGame) {
+                window.wortalGame.initializeAsync().then(() => {
+                    window.wortalGame.startGameAsync();
+                });
+            }
+        } else {
+            window.triggerWortalAd("preroll", "", "Preroll", {
+                adBreakDone: function () {
+                    console.log("[Wortal] AdBreakDone");
+                    _removeLoadingCover();
+                },
+                noShow: function () {
+                    console.log("[Wortal] NoShow");
+                    _removeLoadingCover();
+                }
+            });
+        }
+        console.log("[Wortal] Initialized.");
+    }, function () {
+        console.log("[Wortal] Ad blocker detected.");
+        _removeLoadingCover();
+        isAdBlocked = true;
+    });
+});
 
-document.head.appendChild(init);
+function _removeLoadingCover() {
+    document.getElementById("loading-cover").style.display = "none";
+}
