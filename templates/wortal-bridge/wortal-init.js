@@ -1,3 +1,4 @@
+var isAdBlocked = false;
 let platform = window.getWortalPlatform();
 console.log('[Wortal] Platform: ' + platform);
 
@@ -24,6 +25,10 @@ window.addEventListener("load", () => {
             });
         }
         console.log("[Wortal] Initialized.");
+    }, function () {
+        console.log("[Wortal] Ad blocker detected.");
+        _removeLoadingCover();
+        isAdBlocked = true;
     });
 });
 

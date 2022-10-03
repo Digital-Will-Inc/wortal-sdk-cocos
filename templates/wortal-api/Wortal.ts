@@ -7,6 +7,7 @@ export class Wortal {
     private static _platform: Platform;
     private static _gameName: string;
     private static _isInit: boolean = false;
+    private static _isAdBlocked: boolean = false;
 
     private static _linkInterstitialId: string;
     private static _linkRewardedId: string;
@@ -27,6 +28,9 @@ export class Wortal {
             console.warn("[Wortal] Already initialized");
             return;
         }
+
+        this._isAdBlocked = (window as any).isAdBlocked;
+        console.log("[Wortal] AdBlocker: " + this._isAdBlocked);
 
         Wortal._gameName = document.title;
         Wortal._platform = Wortal.getPlatform();
@@ -82,6 +86,12 @@ export class Wortal {
         if (!Wortal._isInit) {
             console.warn("[Wortal] SDK not initialized before ad call, ad may be skipped.");
             Wortal.init();
+        }
+
+        if (Wortal._isAdBlocked) {
+            console.warn("[Wortal] Ads are blocked. Calling afterAd().");
+            afterAd();
+            return;
         }
 
         if (Wortal._isAdShowing) {
@@ -184,6 +194,12 @@ export class Wortal {
         if (!Wortal._isInit) {
             console.warn("[Wortal] SDK not initialized before ad call, ad may be skipped.");
             Wortal.init();
+        }
+
+        if (Wortal._isAdBlocked) {
+            console.warn("[Wortal] Ads are blocked. Calling afterAd().");
+            afterAd();
+            return;
         }
 
         if (Wortal._isAdShowing) {
