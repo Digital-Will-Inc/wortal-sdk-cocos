@@ -22,7 +22,9 @@ module.exports = {
         let editor = Editor.App.version;
         log("Detected editor version: " + editor);
 
-        if (compare.compare(editor, "2.3.2", ">=") && compare.compare(editor, "2.4.9", "<=")) {
+        if (compare.compare(editor, "2.3.2", ">=") && compare.compare(editor, "2.3.4", "<=")) {
+            version = "2.3";
+        } else if (compare.compare(editor, "2.4.0", ">=") && compare.compare(editor, "2.4.10", "<=")) {
             version = "2.4";
         } else {
             error("Version not supported: " + editor);
