@@ -17,7 +17,7 @@ module.exports = {
         const resources_dir = "resources/wortal";
         const resources_dest = "web-mobile/assets/res";
 
-        let PACKAGE_NAME = "Wortal";
+        let PACKAGE_NAME = "Wortal for 2.x";
         let version = "";
         let editor = Editor.App.version;
         log("Detected editor version: " + editor);
