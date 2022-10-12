@@ -2,7 +2,9 @@
 
 ## Installation
 
-- Install the extension from the [Cocos Store](https://store.cocos.com/app/en/detail/4067).
+- Install the extension from the [Cocos Store](https://store.cocos.com/app/en/detail/4149).
+- Open `your-project-path/build-templates/web-mobile/index.html`
+- Change the `<title>` tag to your game name
 
 ### Building
 To use the <b>Wortal SDK</b> in your game, you must build with the <b>web-mobile</b> template.  This is included in the
