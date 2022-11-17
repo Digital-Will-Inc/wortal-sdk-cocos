@@ -155,8 +155,8 @@ function initializeGame (cc, settings, findCanvas) {
 function setLoadingProgress () {
     onProgress = function (finish, total) {
         var progress = 100 * finish / total;
-        if (window.wortalGame) {
-            window.wortalGame.setLoadingProgress(progress);
+        if (window.Wortal) {
+            window.Wortal.setLoadingProgress(progress);
         };
     };
 }
