@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.unload = exports.load = void 0;
 const fs_extra_1 = require("fs-extra");
 const compare_versions_1 = require("compare-versions");
-const path_1 = __importDefault(require("path"));
 const fs_1 = require("fs");
+const path_1 = __importDefault(require("path"));
 const load = () => {
     const project_path = Editor.Project.path;
     const assets_dir = path_1.default.join(project_path, "assets");
