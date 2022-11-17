@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2022-11-17
+### Breaking Change
+- API access is now by module (Wortal.ads, Wortal.analytics)
+
+### Added
+- Context API
+- In-App Purchase API
+- Leaderboard API
+- Player API
+- Session API
+- Examples in documentation
+
+### Changed
+- Extension now uses Wortal SDK Core
+- SDK no longer needs init call
+
 ## [1.1.1] - 2022-10-04
 ### Added
 - Support for ad blockers

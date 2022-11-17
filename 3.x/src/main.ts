@@ -1,18 +1,15 @@
-import {BuildPlugin} from '../@types';
-import {copySync, pathExistsSync} from 'fs-extra';
-import {compare} from 'compare-versions';
+import { BuildPlugin } from '../@types';
+import { copySync, pathExistsSync } from 'fs-extra';
+import { compare } from 'compare-versions';
+import { existsSync } from "fs";
 import path from 'path';
-import {existsSync} from "fs";
 
 export const load: BuildPlugin.load = () => {
     const project_path = Editor.Project.path;
     const assets_dir = path.join(project_path, "assets");
     const api_dir = "wortal-api";
     const build_dir = "build-templates";
-    const bridge_dir = "wortal-bridge";
-    const bridge_dest = "web-mobile/assets/js";
     const demo_dir = "wortal-demo";
-    const resources_dir = "resources/wortal";
 
     let PACKAGE_NAME = "Wortal";
     let version = "";
@@ -47,17 +44,9 @@ export const load: BuildPlugin.load = () => {
             dest: path.join(assets_dir, api_dir)
         },
         {
-            src: path.join(static_templates, bridge_dir),
-            dest: path.join(project_path, build_dir, bridge_dest)
-        },
-        {
             src: path.join(static_templates, demo_dir),
             dest: path.join(assets_dir, demo_dir)
         },
-        {
-            src: path.join(static_templates, resources_dir),
-            dest: path.join(assets_dir, resources_dir)
-        }
     ];
 
     log("Copying assets..");
