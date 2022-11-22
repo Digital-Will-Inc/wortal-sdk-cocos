@@ -1,3 +1,5 @@
+// This isn't getting compiled, we can ignore this.
+// @ts-ignore
 import { WortalPlayer } from "./WortalPlayer";
 
 /**

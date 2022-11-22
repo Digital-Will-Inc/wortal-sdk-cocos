@@ -13,16 +13,16 @@ export function getId(): string {
 /**
  * Opens the platform UI to select friends to invite and play with.
  * @example
- * Wortal.context.chooseAsync('Invite text', 'https://link.to.img', {
- *         caption: 'Play',
- *         data: { exampleData: 'yourData' },
- *     })
- * @param text Message body of the share.
- * @param image URL to the base64 image to include with this share.
+ * Wortal.context.chooseAsync({
+ *     image: 'data:base64Image',
+ *     text: 'Invite text',
+ *     caption: 'Play',
+ *     data: { exampleData: 'yourData' },
+ * });
  * @param payload Object defining the options for the context choice.
  */
-export function chooseAsync(text: string, image: string, payload?: ContextPayload): Promise<void> {
-    return (window as any).Wortal.context.chooseAsync(text, image, payload);
+export function chooseAsync(payload: ContextPayload): Promise<void> {
+    return (window as any).Wortal.context.chooseAsync(payload);
 }
 
 /**
@@ -48,32 +48,32 @@ export function switchAsync(contextId: string): Promise<void> {
 /**
  * Shares a message to the player's friends. Will trigger a UI for the player to choose which friends to share with.
  * @example
- * Wortal.context.shareAsync('Share text', 'https://link.to.img', {
- *         caption: 'Play',
- *         data: { exampleData: 'yourData' },
- *     }).then(result => console.log(result); // Contains shareCount with number of friends the share was sent to.
- * @param text Message body of the share.
- * @param image URL to the base64 image to include with this share.
+ * Wortal.context.shareAsync({
+ *     image: 'data:base64Image',
+ *     text: 'Share text',
+ *     caption: 'Play',
+ *     data: { exampleData: 'yourData' },
+ * }).then(result => console.log(result); // Contains shareCount with number of friends the share was sent to.
  * @param payload Object defining the share message.
  * @returns Number of friends the message was shared with.
  */
-export function shareAsync(text: string, image: string, payload?: ContextPayload): Promise<number> {
-    return (window as any).Wortal.context.shareAsync(text, image, payload);
+export function shareAsync(payload: ContextPayload): Promise<number> {
+    return (window as any).Wortal.context.shareAsync(payload);
 }
 
 /**
  * Posts an update to the current context. Will send a message to the chat thread of the current context.
  * @example
- * Wortal.context.updateAsync('Update text', 'https://link.to.img', {
- *         caption: 'Play',
- *         data: { exampleData: 'yourData' },
- *     });
- * @param text Message body of the share.
- * @param image URL to the base64 image to include with this share.
+ * Wortal.context.updateAsync({
+ *     image: 'data:base64Image',
+ *     text: 'Update text',
+ *     caption: 'Play',
+ *     data: { exampleData: 'yourData' },
+ * });
  * @param payload Object defining the update message.
  */
-export function updateAsync(text: string, image: string, payload?: ContextPayload): Promise<void> {
-    return (window as any).Wortal.context.updateAsync(text, image, payload);
+export function updateAsync(payload: ContextPayload): Promise<void> {
+    return (window as any).Wortal.context.updateAsync(payload);
 }
 
 /**
@@ -81,9 +81,9 @@ export function updateAsync(text: string, image: string, payload?: ContextPayloa
  */
 export interface ContextPayload {
     /** URL of base64 encoded image to be displayed. This is required for the payload to be sent. */
-    image?: string;
+    image: string;
     /** Message body. This is required for the payload to be sent. */
-    text?: string | LocalizableContent;
+    text: string | LocalizableContent;
     /** Text of the call-to-action button. */
     caption?: string | LocalizableContent;
     /** Text of the call-to-action button. */
