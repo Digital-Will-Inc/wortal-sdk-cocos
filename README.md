@@ -86,13 +86,17 @@ and send messages to each other.
 
 ```typescript
 // Invite a friend to play the game.
-Wortal.context.chooseAsync('Invite text', 'https://link.to.img', {
+Wortal.context.chooseAsync({
+    image: 'data:base64image',
+    text: 'Invite text',
     caption: 'Play',
     data: { exampleData: 'yourData' },
 })
 
 // Share your game activity with friends.
-Wortal.context.shareAsync('Share text', 'https://link.to.img', {
+Wortal.context.shareAsync({
+    image: 'data:base64image',
+    text: 'Share text',
     caption: 'Play',
     data: { exampleData: 'yourData' },
 }).then(result => console.log(result); // Contains shareCount with number of friends the share was sent to.

@@ -153,7 +153,9 @@ export class DemoManager extends Component {
     }
 
     callContextChoose() {
-        Wortal.context.chooseAsync("Let's play!", this.createImg(256, 256), {
+        Wortal.context.chooseAsync({
+            image: this.createImg(256, 256),
+            text: "Let's play!",
             caption: "Play",
         })
             .then(() => this.log("New context: " + Wortal.context.getId()))
@@ -161,19 +163,21 @@ export class DemoManager extends Component {
     }
 
     callContextSwitch() {
-        Wortal.context.switchAsync("CdJolqohlZa8mKEpWn4K0ibg")
+        Wortal.context.switchAsync("some-player-id")
             .then(() => this.log(Wortal.context.getId()))
             .catch(error => this.log(error));
     }
 
     callContextCreate() {
-        Wortal.context.createAsync("3")
+        Wortal.context.createAsync("some-player-id")
             .then(() => this.log(Wortal.context.getId()))
             .catch(error => this.log(error));
     }
 
     callContextShare() {
-        Wortal.context.shareAsync("Let's play!", this.createImg(1200, 1200), {
+        Wortal.context.shareAsync({
+            image: this.createImg(1200, 1200),
+            text: "Let's play!",
             intent: "REQUEST",
             caption: "Play",
         })
@@ -182,7 +186,9 @@ export class DemoManager extends Component {
     }
 
     callContextUpdate() {
-        Wortal.context.updateAsync("We played!", this.createImg(256, 256), {
+        Wortal.context.updateAsync({
+            image: this.createImg(256, 256),
+            text: "We played!",
             caption: "Play",
             data: {game: "da test"},
         })

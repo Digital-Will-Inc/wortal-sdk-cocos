@@ -59,6 +59,7 @@ export function getDataAsync(keys: string[]): Promise<any> {
 export function setDataAsync(data: Record<string, unknown>): Promise<void> {
     return (window as any).Wortal.player.setDataAsync(data);
 }
+
 /**
  * Gets the friends of the player who have also played this game before.
  * @example
@@ -73,6 +74,7 @@ export function setDataAsync(data: Record<string, unknown>): Promise<void> {
 export function getConnectedPlayersAsync(payload?: ConnectedPlayerPayload): Promise<WortalPlayer[]> {
     return (window as any).Wortal.player.getConnectedPlayersAsync(payload);
 }
+
 /**
  * Gets a signed player object that includes the player ID and signature for validation. This can be used to
  * send something to a backend server for validation, such as game or purchase data.
