@@ -217,7 +217,7 @@ export class DemoManager extends Component {
     }
 
     callIAPBuy() {
-        Wortal.iap.makePurchaseAsync({productID: "jp.rgames.wortalsdktest.purchase.llama_pack_1.test"})
+        Wortal.iap.makePurchaseAsync({productID: "some.product.id"})
             .then(receipt => {
                 this.log(receipt.paymentID);
                 this.log(receipt.purchaseToken);
