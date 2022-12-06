@@ -48,7 +48,7 @@ Rewarded ads can be shown too. These are longer, optional ads that the player ca
 must be notified of the ad and give permission to show before it can be shown.
 
 ```typescript
-// This examples shows the game flow independent of the outcome of the ad.
+// This example shows the game flow independent of the outcome of the ad.
 Wortal.ads.showRewarded('BonusCoins', pauseGame, resumeGame, skipBonus, addBonusCoins);
 
 // This example shows the game flow depending on the outcome of the ad.
