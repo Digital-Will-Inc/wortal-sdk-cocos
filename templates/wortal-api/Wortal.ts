@@ -24,4 +24,14 @@ export class Wortal {
     static player = _player;
     /** Session API */
     static session = _session;
+
+    /**
+     * Registers a callback for when the game is paused via platform SDK.
+     * @param callback
+     */
+    onPause(callback: Function): void {
+        (window as any).Wortal.onPause(() => {
+            callback();
+        });
+    }
 }
