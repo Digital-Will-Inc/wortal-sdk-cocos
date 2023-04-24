@@ -14,9 +14,19 @@
  * @param description Description of the placement.
  * @param beforeAd Callback for before the ad is shown. Pause the game here.
  * @param afterAd Callback for after the ad is shown. Resume the game here.
+ * @param noFill Callback for when the ad is not filled. This can happen if the platform has no ads to show or if the
+ * rate limit has been reached. If this is not provided, the afterAd callback will be used.
+ * @throws {ErrorMessage} See error.message for details.
+ * <ul>
+ * <li>INVALID_PARAM</li>
+ * </ul>
  */
-export function showInterstitial(placement: PlacementType, description: string, beforeAd: Function, afterAd: Function): void {
-    (window as any).Wortal.ads.showInterstitial(placement, description, beforeAd, afterAd);
+export function showInterstitial(placement: PlacementType,
+                                 description: string,
+                                 beforeAd: Function,
+                                 afterAd: Function,
+                                 noFill?: Function): void {
+    (window as any).Wortal.ads.showInterstitial(placement, description, beforeAd, afterAd, noFill);
 }
 
 /**
@@ -33,10 +43,20 @@ export function showInterstitial(placement: PlacementType, description: string, 
  * @param afterAd Callback for after the ad is shown. Resume the game here.
  * @param adDismissed Callback for when the player dismissed the ad. Do not reward the player.
  * @param adViewed Callback for when the player has successfully watched the ad. Reward the player here.
+ * @param noFill Callback for when the ad is not filled. This can happen if the platform has no ads to show or if
+ * the rate limit has been reached. If this is not provided, the afterAd callback will be used.
+ * @throws {ErrorMessage} See error.message for details.
+ * <ul>
+ * <li>INVALID_PARAM</li>
+ * </ul>
  */
-export function showRewarded(description: string, beforeAd: Function, afterAd: Function,
-                             adDismissed: Function, adViewed: Function): void {
-    (window as any).Wortal.ads.showRewarded(description, beforeAd, afterAd, adDismissed, adViewed);
+export function showRewarded(description: string,
+                             beforeAd: Function,
+                             afterAd: Function,
+                             adDismissed: Function,
+                             adViewed: Function,
+                             noFill?: Function): void {
+    (window as any).Wortal.ads.showRewarded(description, beforeAd, afterAd, adDismissed, adViewed, noFill);
 }
 
 /**

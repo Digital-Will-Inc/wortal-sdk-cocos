@@ -1,6 +1,6 @@
 /**
  * Checks whether IAP is enabled in this session.
- * @returns True if IAP is available to the user. False if IAP is not supported on the current platform,
+ * @returns {boolean} True if IAP is available to the user. False if IAP is not supported on the current platform,
  * the player's device, or the IAP service failed to load properly.
  */
 export function isEnabled(): boolean {
@@ -12,7 +12,15 @@ export function isEnabled(): boolean {
  * @example
  * Wortal.iap.getCatalogAsync()
  *  .then(products => console.log(products));
- * @returns Array of products available to the player. Returns an empty list if
+ * @returns {Promise<Product[]>} Array of products available to the player. Returns an empty list if purchases are
+ * not supported in the player's region.
+ * @throws {ErrorMessage} See error.message for details.
+ * <ul>
+ * <li>NOT_SUPPORTED</li>
+ * <li>CLIENT_UNSUPPORTED_OPERATION</li>
+ * <li>PAYMENTS_NOT_INITIALIZED</li>
+ * <li>NETWORK_FAILURE</li>
+ * </ul>
  */
 export function getCatalogAsync(): Promise<Product[]> {
     return (window as any).Wortal.iap.getCatalogAsync();
@@ -24,7 +32,14 @@ export function getCatalogAsync(): Promise<Product[]> {
  * @example
  * Wortal.iap.getPurchasesAsync()
  *  .then(purchases => console.log(purchases));
- * @returns Array of purchases.
+ * @returns {Promise<Purchase[]>} Array of purchases.
+ * @throws {ErrorMessage} See error.message for details.
+ * <ul>
+ * <li>NOT_SUPPORTED</li>
+ * <li>CLIENT_UNSUPPORTED_OPERATION</li>
+ * <li>PAYMENTS_NOT_INITIALIZED</li>
+ * <li>NETWORK_FAILURE</li>
+ * </ul>
  */
 export function getPurchasesAsync(): Promise<Purchase[]> {
     return (window as any).Wortal.iap.getPurchasesAsync();
@@ -37,18 +52,39 @@ export function getPurchasesAsync(): Promise<Purchase[]> {
  *     productID: 'my_product_123',
  * }).then(purchase => console.log(purchase));
  * @param purchase Object defining the product ID and purchase information.
- * @returns Information about the purchase.
+ * @returns {Promise<Purchase>} A Promise that resolves when the product is successfully purchased by the player. Otherwise, it rejects.
+ * @throws {ErrorMessage} See error.message for details.
+ * <ul>
+ * <li>NOT_SUPPORTED</li>
+ * <li>CLIENT_UNSUPPORTED_OPERATION</li>
+ * <li>PAYMENTS_NOT_INITIALIZED</li>
+ * <li>INVALID_PARAM</li>
+ * <li>NETWORK_FAILURE</li>
+ * <li>INVALID_OPERATION</li>
+ * <li>USER_INPUT</li>
+ * </ul>
  */
 export function makePurchaseAsync(purchase: PurchaseConfig): Promise<Purchase> {
     return (window as any).Wortal.iap.makePurchaseAsync(purchase);
 }
 
 /**
- * Consumes the given purchase. This will remove the purchase from the player's available purchases inventory and
- * reset its availability in the catalog.
+ * Consumes a specific purchase belonging to the current player. Before provisioning a product's effects to the player,
+ * the game should request the consumption of the purchased product. Once the purchase is successfully consumed,
+ * the game should immediately provide the player with the effects of their purchase. This will remove the
+ * purchase from the player's available purchases inventory and reset its availability in the catalog.
  * @example
  * Wortal.iap.consumePurchaseAsync('abc123');
- * @param token String representing the purchaseToken of the item to consume.
+ * @param token The purchase token of the purchase that should be consumed.
+ * @returns {Promise<void>} A Promise that resolves when the purchase is successfully consumed. Otherwise, it rejects.
+ * @throws {ErrorMessage} See error.message for details.
+ * <ul>
+ * <li>NOT_SUPPORTED</li>
+ * <li>CLIENT_UNSUPPORTED_OPERATION</li>
+ * <li>PAYMENTS_NOT_INITIALIZED</li>
+ * <li>INVALID_PARAM</li>
+ * <li>NETWORK_FAILURE</li>
+ * </ul>
  */
 export function consumePurchaseAsync(token: string): Promise<void> {
     return (window as any).Wortal.iap.consumePurchaseAsync(token);
@@ -58,17 +94,29 @@ export function consumePurchaseAsync(token: string): Promise<void> {
  * A product that the player can purchase.
  */
 export interface Product {
-    /** Title of the product */
+    /**
+     * Title of the product
+     * */
     title: string,
-    /** ID of the product */
+    /**
+     * ID of the product
+     * */
     productID: string,
-    /** Text description of the product */
+    /**
+     * Text description of the product
+     * */
     description?: string,
-    /** A URL to the product's image */
+    /**
+     * A URL to the product's image
+     * */
     imageURI?: string,
-    /** A localized string representing the product's price in the local currency, e.g. "$1" */
+    /**
+     * A localized string representing the product's price in the local currency, e.g. "$1"
+     * */
     price: string,
-    /** A string representing which currency is the price calculated in, following [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) */
+    /**
+     * A string representing which currency is the price calculated in, following [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217)
+     * */
     priceCurrencyCode: string
 }
 
@@ -76,9 +124,13 @@ export interface Product {
  * Configuration for a purchase.
  */
 export interface PurchaseConfig {
-    /** ID of the product */
+    /**
+     * ID of the product
+     * */
     productID: string,
-    /** Optional payload assigned by game developer, which will be also attached in the signed purchase request */
+    /**
+     * Optional payload assigned by game developer, which will be also attached in the signed purchase request
+     * */
     developerPayload?: string
 }
 
@@ -86,17 +138,29 @@ export interface PurchaseConfig {
  * A purchase transaction.
  */
 export interface Purchase {
-    /** Optional payload assigned by game developer, which will be also attached in the signed purchase request */
+    /**
+     * Optional payload assigned by game developer, which will be also attached in the signed purchase request
+     * */
     developerPayload?: string,
-    /** ID of the payment (e.g. Google Play Order) */
+    /**
+     * ID of the payment (e.g. Google Play Order)
+     * */
     paymentID: string,
-    /** ID of the product */
+    /**
+     * ID of the product
+     * */
     productID: string,
-    /** Timestamp of the payment */
+    /**
+     * Timestamp of the payment
+     * */
     purchaseTime: string,
-    /** Token for purchase consumption */
+    /**
+     * Token for purchase consumption
+     * */
     purchaseToken: string,
-    /** Signature of the purchase info for server side verification */
+    /**
+     * Signature of the purchase info for server side verification
+     * */
     signedRequest: Signature
 }
 
