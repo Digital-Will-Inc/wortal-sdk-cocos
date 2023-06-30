@@ -3,6 +3,7 @@ import * as _analytics from './api/Analytics';
 import * as _context from './api/Context';
 import * as _iap from './api/IAP';
 import * as _leaderboard from './api/Leaderboard';
+import * as _notifications from './api/Notifications';
 import * as _player from './api/Player';
 import * as _session from './api/Session';
 
@@ -20,6 +21,8 @@ export class Wortal {
     static iap = _iap;
     /** Leaderboard API */
     static leaderboard = _leaderboard;
+    /** Notifications API */
+    static notifications = _notifications;
     /** Player API */
     static player = _player;
     /** Session API */
