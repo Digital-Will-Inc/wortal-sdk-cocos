@@ -1,4 +1,4 @@
-import { InviteFilter, InviteSectionType } from "../types/Context";
+import { ContextFilter, InviteFilter, InviteSectionType, ShareDestination } from "../types/Context";
 
 /**
  * Payload for context.inviteAsync. Defines the content to be sent in the invite.
@@ -45,6 +45,173 @@ export interface InvitePayload {
      * PLATFORM NOTE: Facebook only.
      */
     sections?: InviteSection[];
+}
+
+/**
+ * Payload for context.chooseAsync. Defines the filters and search parameters to apply to the friend list.
+ */
+export interface ChoosePayload {
+    /**
+     * Optional customizable text field in the share UI.
+     * This can be used to describe the incentive a user can get from sharing.
+     */
+    description?: string | LocalizableContent;
+    /**
+     * An array of filters to be applied to the friend list. Only the first filter is currently used.
+     */
+    filters?: [ContextFilter];
+    /**
+     * Specify how long a friend should be filtered out after the current player sends them a message.
+     * This parameter only applies when `NEW_INVITATIONS_ONLY` filter is used.
+     * When not specified, it will filter out any friend who has been sent a message.
+     *
+     * PLATFORM NOTE: Viber only.
+     */
+    hoursSinceInvitation?: number;
+    /**
+     * Context maximum size for matching.
+     */
+    maxSize?: number;
+    /**
+     * Context minimum size for matching.
+     */
+    minSize?: number;
+}
+
+/**
+ * Payload for context.shareAsync. Defines the message to be sent to the context.
+ */
+export interface SharePayload {
+    /**
+     * Text of the call-to-action button.
+     */
+    cta?: string | LocalizableContent;
+    /**
+     * Object passed to any session launched from this context message.
+     * Its size must be <=1000 chars when stringified.
+     * It can be accessed from `Wortal.session.getEntryPointData()`.
+     */
+    data?: Record<string, unknown>;
+    /**
+     * Optional customizable text field in the share UI.
+     * This can be used to describe the incentive a user can get from sharing.
+     */
+    description?: string | LocalizableContent;
+    /**
+     * An array of filters to be applied to the friend list. Only the first filter is currently used.
+     */
+    filters?: [ContextFilter];
+    /**
+     * Specify how long a friend should be filtered out after the current player sends them a message.
+     * This parameter only applies when `NEW_INVITATIONS_ONLY` filter is used.
+     * When not specified, it will filter out any friend who has been sent a message.
+     *
+     * PLATFORM NOTE: Viber only.
+     */
+    hoursSinceInvitation?: number;
+    /**
+     * Data URL of base64 encoded image to be displayed. This is required for the payload to be sent.
+     */
+    image: string;
+    /**
+     * Message format to be used. There's no visible difference among the available options.
+     */
+    intent?: 'INVITE' | 'REQUEST' | 'CHALLENGE' | 'SHARE';
+    /**
+     * Defines the minimum number of players to be selected to start sharing.
+     */
+    minShare?: number;
+    /**
+     * Optional property to directly send share messages to multiple players with a confirmation prompt.
+     * Selection UI will be skipped if this property is set.
+     *
+     * PLATFORM NOTE: Viber only.
+     */
+    playerIds?: string[];
+    /**
+     * A text message, or an object with the default text as the value of 'default' and another object mapping locale
+     * keys to translations as the value of 'localizations'.
+     */
+    text: string | LocalizableContent;
+    /**
+     * Optional property to switch share UI mode.
+     *
+     * - DEFAULT: Serial contact card with share and skip button.
+     * - MULTIPLE: Selectable contact list.
+     */
+    ui?: 'DEFAULT' | 'MULTIPLE';
+    /**
+     * An optional array to set sharing destinations in the share dialog.
+     * If not specified all available sharing destinations will be displayed.
+     *
+     * PLATFORM NOTE: Facebook only.
+     */
+    shareDestination?: ShareDestination[];
+    /**
+     * A flag indicating whether to switch the user into the new context created on sharing.
+     *
+     * PLATFORM NOTE: Facebook only.
+     */
+    switchContext?: boolean;
+}
+
+/**
+ * Payload for context.updateAsync. Defines the message to be sent to the context.
+ */
+export interface UpdatePayload {
+    /**
+     * Message format to be used.
+     */
+    action?: 'CUSTOM';
+    /**
+     * Text of the call-to-action button.
+     */
+    cta?: string | LocalizableContent;
+    /**
+     * Object passed to any session launched from this context message.
+     * Its size must be <=1000 chars when stringified.
+     * It can be accessed from `Wortal.session.getEntryPointData()`.
+     */
+    data?: Record<string, unknown>;
+    /**
+     * Data URL of base64 encoded image to be displayed. This is required for the payload to be sent.
+     */
+    image: string;
+    /**
+     * Optional content for a gif or video. At least one image or media should be provided in order to render the update.
+     *
+     * PLATFORM NOTE: Facebook only.
+     */
+    media?: MediaParams;
+    /**
+     * Specifies notification setting for the custom update. This can be 'NO_PUSH' or 'PUSH', and defaults to 'NO_PUSH'.
+     * Use push notification only for updates that are high-signal and immediately actionable for the recipients.
+     * Also note that push notification is not always guaranteed, depending on user setting and platform policies.
+     */
+    notifications?: 'NO_PUSH' | 'PUSH';
+    /**
+     * Specifies how the update should be delivered. This can be one of the following:
+     *
+     * - 'IMMEDIATE' - The update should be posted immediately.
+     * - 'LAST' - The update should be posted when the game session ends. The most recent update sent using the 'LAST' strategy will be the one sent.
+     * - 'IMMEDIATE_CLEAR': will be sent immediately, and also discard any pending LAST payloads in the same session.
+     *
+     * If no strategy is specified, we default to 'IMMEDIATE'.
+     */
+    strategy?: 'IMMEDIATE' | 'LAST' | 'IMMEDIATE_CLEAR';
+    /**
+     * ID of the template this custom update is using. Templates should be predefined in fbapp-config.json.
+     * See the [Bundle Config documentation](https://developers.facebook.com/docs/games/instant-games/bundle-config)
+     * for documentation about fbapp-config.json.
+     *
+     * PLATFORM NOTE: Facebook only.
+     */
+    template?: string;
+    /**
+     * A text message, or an object with the default text as the value of 'default' and another object mapping locale
+     * keys to translations as the value of 'localizations'.
+     */
+    text: string | LocalizableContent;
 }
 
 /**
@@ -106,4 +273,25 @@ export interface InviteSection {
      * maximum number of results for that section type will be used.
      */
     maxResults?: number;
+}
+
+/**
+ * Represents the media payload used by custom update and custom share.
+ */
+export interface MediaParams {
+    /**
+     * URL of the gif to be displayed.
+     */
+    gif?: MediaContent;
+    /**
+     * URL of the video to be displayed.
+     */
+    video?: MediaContent;
+}
+
+/**
+ * Specifies the content for media.
+ */
+export interface MediaContent {
+    url: string;
 }
