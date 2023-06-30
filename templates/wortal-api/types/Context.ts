@@ -20,3 +20,24 @@ export type ContextFilter = 'NEW_CONTEXT_ONLY'
     | 'INCLUDE_EXISTING_CHALLENGES'
     | 'NEW_PLAYERS_ONLY'
     | 'NEW_INVITATIONS_ONLY';
+
+/**
+ * A filter that may be applied to an inviteAsync operation. If no results are returned with the filters, then the filters will not be applied.
+ *
+ * - 'NEW_CONTEXT_ONLY' - Prefer to only surface contexts the game has not been played in before. This can include players who have not played the game before.
+ * - 'NEW_PLAYERS_ONLY' - Prefer to only surface people who have not played the game before.
+ * - 'EXISTING_CONTEXT_ONLY' - Prefer to only surface contexts the game has been played in before.
+ * - 'EXISTING_PLAYERS_ONLY' - Prefer to only surface people who have played the game before.
+ */
+export type InviteFilter = 'NEW_CONTEXT_ONLY'
+    | 'NEW_PLAYERS_ONLY'
+    | 'EXISTING_CONTEXT_ONLY'
+    | 'EXISTING_PLAYERS_ONLY';
+
+/**
+ * Represents the type of section to include. All section types may include both new and existing contexts and players.
+ *
+ * - GROUPS - This contains group contexts, such as contexts from group threads.
+ * - USERS - This contains individual users, such as friends or 1:1 threads.
+ */
+export type InviteSectionType = 'GROUPS' | 'USERS';
