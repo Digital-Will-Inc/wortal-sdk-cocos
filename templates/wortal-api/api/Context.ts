@@ -1,4 +1,4 @@
-import { ContextSizeResponse, LocalizableContent } from "../interfaces/Context";
+import { ContextSizeResponse, LinkSharePayload, LocalizableContent } from "../interfaces/Context";
 import { ContextFilter, ContextType } from "../types/Context";
 import { WortalPlayer } from "./Player";
 import { ErrorMessage} from "../interfaces/Wortal";
@@ -156,6 +156,36 @@ export function switchAsync(contextId: string): Promise<void> {
  */
 export function shareAsync(payload: ContextPayload): Promise<number> {
     return (window as any).Wortal.context.shareAsync(payload);
+}
+
+/**
+ * This invokes a dialog that contains a custom game link that users can copy to their clipboard, or share.
+ * A blob of data can be attached to the custom link - game sessions initiated from the link will be able to access the
+ * data through Wortal.session.getEntryPointData(). This data should be less than or equal to 1000 characters when
+ * stringified. The provided text and image will be used to generate the link preview, with the game name as the title
+ * of the preview. The text is recommended to be less than 44 characters. The image is recommended to either be a square
+ * or of the aspect ratio 1.91:1. The returned promise will resolve when the dialog is closed regardless if the user
+ * actually shared the link or not.
+ * @example
+ * Wortal.context.shareLinkAsync({
+ *    image: 'data:base64Image',
+ *    text: 'Share text',
+ *    data: { exampleData: 'yourData' },
+ * })
+ * .then(() => resumeGame);
+ * @param payload Object defining the payload for the custom link.
+ * @returns {Promise<void>} Promise that resolves when the dialog is closed.
+ * @throws {ErrorMessage} See error.message for details.
+ * <ul>
+ * <li>NOT_SUPPORTED</li>
+ * <li>INVALID_PARAM</li>
+ * <li>NETWORK_FAILURE</li>
+ * <li>PENDING_REQUEST</li>
+ * <li>INVALID_OPERATION</li>
+ * </ul>
+ */
+export function shareLinkAsync(payload: LinkSharePayload): Promise<void> {
+    return (window as any).Wortal.context.shareLinkAsync(payload);
 }
 
 /**
