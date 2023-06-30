@@ -1,3 +1,5 @@
+import { ErrorMessage} from "../interfaces/Wortal";
+
 /**
  * Logs the start of a level.
  * @example

@@ -1,10 +1,10 @@
-import * as _ads from './WortalAds';
-import * as _analytics from './WortalAnalytics';
-import * as _context from './WortalContext';
-import * as _iap from './WortalIAP';
-import * as _leaderboard from './WortalLeaderboard';
-import * as _player from './WortalPlayer';
-import * as _session from './WortalSession';
+import * as _ads from './api/Ads';
+import * as _analytics from './api/Analytics';
+import * as _context from './api/Context';
+import * as _iap from './api/IAP';
+import * as _leaderboard from './api/Leaderboard';
+import * as _player from './api/Player';
+import * as _session from './api/Session';
 
 /**
  * API for the Wortal SDK.
