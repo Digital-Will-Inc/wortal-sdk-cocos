@@ -1,4 +1,4 @@
-import { LocalizableContent } from "../interfaces/Context";
+import { ContextSizeResponse, LocalizableContent } from "../interfaces/Context";
 import { ContextFilter, ContextType } from "../types/Context";
 import { WortalPlayer } from "./Player";
 import { ErrorMessage} from "../interfaces/Wortal";
@@ -181,6 +181,23 @@ export function shareAsync(payload: ContextPayload): Promise<number> {
  */
 export function updateAsync(payload: ContextPayload): Promise<void> {
     return (window as any).Wortal.context.updateAsync(payload);
+}
+
+/**
+ * This function determines whether the number of participants in the current game context is between a given minimum
+ * and maximum, inclusive. If one of the bounds is null only the other bound will be checked against. It will always
+ * return the original result for the first call made in a context in a given game play session. Subsequent calls,
+ * regardless of arguments, will return the answer to the original query until a context change occurs and the query
+ * result is reset.
+ * @example
+ * const result = Wortal.context.isSizeBetween(2, 4);
+ * console.log(result.answer);
+ * @param min Minimum number of players in context.
+ * @param max Maximum number of players in context.
+ * @returns {ContextSizeResponse} Object with the result of the check. Null if not supported.
+ */
+export function isSizeBetween(min?: number, max?: number): ContextSizeResponse | null {
+    return (window as any).Wortal.context.isSizeBetween(min, max);
 }
 
 /**
