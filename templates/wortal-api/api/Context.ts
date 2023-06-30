@@ -1,9 +1,12 @@
-import { WortalPlayer } from "./WortalPlayer";
+import { LocalizableContent } from "../interfaces/Context";
+import { ContextFilter, ContextType } from "../types/Context";
+import { WortalPlayer } from "./Player";
+import { ErrorMessage} from "../interfaces/Wortal";
 
 /**
  * Gets the ID of the current context.
  * @example
- * let id = Wortal.context.getId();
+ * const id = Wortal.context.getId();
  * console.log(id);
  * @returns {string | null} String ID of the current context if one exists. Null if the player is playing solo or
  * if the game is being played on a platform that does not currently support context.
@@ -15,15 +18,9 @@ export function getId(): string | null {
 /**
  * Gets the type of the current context.
  * @example
- * let type = Wortal.context.getType();
+ * const type = Wortal.context.getType();
  * console.log(type);
- * @returns {ContextType} The type of the current context. Possible values:
- * <ul>
- * <li>SOLO - Default</li>
- * <li>THREAD</li>
- * <li>GROUP - Facebook only</li>
- * <li>POST - Facebook only</li>
- * </ul>
+ * @returns {ContextType} The type of the current context.
  */
 export function getType(): ContextType {
     return (window as any).Wortal.context.getType();
@@ -31,7 +28,7 @@ export function getType(): ContextType {
 
 /**
  * Gets an array of WortalPlayer objects containing information about active players in the current context
- * (people who played the game in the current context in the last 90 days). This may include the current player.
+ * (people who played the game in the current context in the last 90 days).
  * @example
  * Wortal.context.getPlayersAsync()
  *  .then(players => {
@@ -39,7 +36,8 @@ export function getType(): ContextType {
  *    console.log(players[0].id);
  *    console.log(players[0].name);
  *    });
- * @returns {Promise<WortalPlayer[]>} Array of players in the current context.
+ * @returns {Promise<WortalPlayer[]>} Promise that contains an array of players in the current context.
+ * This may include the current player.
  * @throws {ErrorMessage} See error.message for details.
  * <ul>
  * <li>NOT_SUPPORTED</li>
@@ -57,14 +55,10 @@ export function getPlayersAsync(): Promise<WortalPlayer[]> {
  * to switch into that context, and resolve if successful. Otherwise, if the player exits the menu or the client fails
  * to switch into the new context, this function will reject.
  * @example
- * Wortal.context.chooseAsync({
- *     image: 'data:base64Image',
- *     text: 'Invite text',
- *     caption: 'Play',
- *     data: { exampleData: 'yourData' },
- * });
+ * Wortal.context.chooseAsync()
+ *  .then(console.log(Wortal.context.getId()));
  * @param payload Object defining the options for the context choice.
- * @returns {Promise<void>} A promise that resolves with an array of player IDs of the players that were invited.
+ * @returns {Promise<void>} Promise that resolves when the context is switched.
  * @throws {ErrorMessage} See error.message for details.
  * <ul>
  * <li>NOT_SUPPORTED</li>
@@ -76,7 +70,7 @@ export function getPlayersAsync(): Promise<WortalPlayer[]> {
  * <li>CLIENT_UNSUPPORTED_OPERATION</li>
  * </ul>
  */
-export function chooseAsync(payload: ContextPayload): Promise<void> {
+export function chooseAsync(payload?: ContextPayload): Promise<void> {
     return (window as any).Wortal.context.chooseAsync(payload);
 }
 
@@ -93,8 +87,9 @@ export function chooseAsync(payload: ContextPayload): Promise<void> {
  * Wortal.context.createAsync('player123');
  * @param playerId ID of player to create a context with, or a list of player IDs to create a context with. If not
  * specified, a friend picker will be loaded to ask the player to create a context with friends to play with. Link
- * and Viber will only accept a single, required player ID.
- * @returns {Promise<void>} A promise that resolves when the game has switched into the new context, or rejects otherwise.
+ * and Viber will only accept a single, required player ID. If no ID is passed on these platforms the call will fail.
+ * If an array of IDs is passed on these platforms, the call will be made with the first ID in the array.
+ * @returns {Promise<void>} Promise that resolves when the game has switched into the new context, or rejects otherwise.
  * @throws {ErrorMessage} See error.message for details.
  * <ul>
  * <li>NOT_SUPPORTED</li>
@@ -143,11 +138,12 @@ export function switchAsync(contextId: string): Promise<void> {
  * Wortal.context.shareAsync({
  *     image: 'data:base64Image',
  *     text: 'Share text',
- *     caption: 'Play',
+ *     cta: 'Play',
  *     data: { exampleData: 'yourData' },
  * }).then(result => console.log(result)); // Contains shareCount with number of friends the share was sent to.
  * @param payload Object defining the share message.
- * @returns {Promise<number>} Number of friends the message was shared with. Facebook will return 0.
+ * @returns {Promise<number>} Promise that resolves when the platform's friend picker has closed.
+ * Includes number of friends the message was shared with. Facebook will always return 0.
  * @throws {ErrorMessage} See error.message for details.
  * <ul>
  * <li>NOT_SUPPORTED</li>
@@ -164,11 +160,13 @@ export function shareAsync(payload: ContextPayload): Promise<number> {
 
 /**
  * Posts an update to the current context. Will send a message to the chat thread of the current context.
+ * When players launch the game from this message, those game sessions will be able to access the specified blob
+ * of data through Wortal.session.getEntryPointData().
  * @example
  * Wortal.context.updateAsync({
  *     image: 'data:base64Image',
  *     text: 'Update text',
- *     caption: 'Play',
+ *     cta: 'Play',
  *     data: { exampleData: 'yourData' },
  * });
  * @param payload Object defining the update message.
@@ -273,41 +271,3 @@ export interface ContextPayload {
      */
     template?: string;
 }
-
-/**
- * Enable passing localizable content to API calls.
- * SDK will use the current player's locale for locale matching.
- */
-export interface LocalizableContent {
-    /** T
-     * ext will be used if not finding matching locale
-     * */
-    default: string;
-    /**
-     * Key value pairs of localized strings
-     * */
-    localizations: Record<string, string>;
-}
-
-/**
- * Defines the filtering behavior
- *
- * - `NEW_CONTEXT_ONLY` only enlists contexts that the current player is in, but never participated in (e.g. a new context created by a friend).
- * - `INCLUDE_EXISTING_CHALLENGES` enlists contexts that the current player has participated before.
- * - `NEW_PLAYERS_ONLY` only enlists friends who haven't played this game before.
- * - `NEW_INVITATIONS_ONLY` only enlists friends who haven't been sent an in-game message before. This filter can be fine-tuned with `hoursSinceInvitation` parameter.
- */
-export type ContextFilter = 'NEW_CONTEXT_ONLY'
-    | 'INCLUDE_EXISTING_CHALLENGES'
-    | 'NEW_PLAYERS_ONLY'
-    | 'NEW_INVITATIONS_ONLY';
-
-/**
- * The type of the current game context.
- *
- * - `SOLO` - Default context, where the player is the only participant.
- * - `THREAD` - A chat thread.
- * - `POST` - A Facebook post - FB only
- * - `GROUP` - A Facebook group - FB only.
- */
-export type ContextType = 'SOLO' | 'THREAD' | 'GROUP' | 'POST';
