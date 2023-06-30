@@ -26,12 +26,26 @@ export class Wortal {
     static session = _session;
 
     /**
-     * Registers a callback for when the game is paused via platform SDK.
-     * @param callback
+     * Sets a callback which will be invoked when the app is brought to the background.
+     * @param callback Callback to invoke.
      */
     onPause(callback: Function): void {
         (window as any).Wortal.onPause(() => {
             callback();
         });
+    }
+
+    /**
+     * Requests and performs haptic feedback on supported devices.
+     * @returns {Promise<void>} Haptic feedback requested successfully
+     * @throws {ErrorMessage} See error.message for details.
+     * <ul>
+     * <li>NOT_SUPPORTED</li>
+     * <li>CLIENT_UNSUPPORTED_OPERATION</li>
+     * <li>INVALID_OPERATION</li>
+     * </ul>
+     */
+    performHapticFeedbackAsync(): Promise<void> {
+        return (window as any).Wortal.performHapticFeedbackAsync();
     }
 }
