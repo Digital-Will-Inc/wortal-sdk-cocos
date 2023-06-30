@@ -1,4 +1,4 @@
-import { ContextSizeResponse, LinkSharePayload, LocalizableContent } from "../interfaces/Context";
+import { ContextSizeResponse, InvitePayload, LinkSharePayload, LocalizableContent } from "../interfaces/Context";
 import { ContextFilter, ContextType } from "../types/Context";
 import { WortalPlayer } from "./Player";
 import { ErrorMessage} from "../interfaces/Wortal";
@@ -126,6 +126,41 @@ export function createAsync(playerId?: string | string[]): Promise<void> {
  */
 export function switchAsync(contextId: string): Promise<void> {
     return (window as any).Wortal.context.switchAsync(contextId);
+}
+
+/**
+ * This invokes a dialog to let the user invite one or more people to the game. A blob of data can be attached to the
+ * invite which every game session launched from the invite will be able to access from Wortal.session.getEntryPointData().
+ * This data must be less than or equal to 1000 characters when stringified. The user may choose to cancel the action
+ * and close the dialog, and the returned promise will resolve when the dialog is closed regardless of whether the user
+ * actually invited people or not. The sections included in the dialog can be customized by using the sections parameter.
+ * This can specify which sections to include, how many results to include in each section, and what order the sections
+ * should appear in. The last section will include as many results as possible. If no sections are specified, the
+ * default section settings will be applied. The filters parameter allows for filtering the results. If no results are
+ * returned when the filters are applied, the results will be generated without the filters.
+ * @example
+ * Wortal.context.inviteAsync({
+ *    image: 'data:base64Image',
+ *    text: 'Invite text',
+ *    cta: 'Play',
+ *    data: { exampleData: 'yourData' },
+ * })
+ * .then(() => console.log("Invite sent!"))
+ * @param {InvitePayload} payload Specify what to share in the invite. See example for details.
+ * @returns {Promise<number>} Promise that resolves when the platform's friend picker has closed.
+ * Includes number of friends the invite was shared with. Facebook will always return 0.
+ * @throws {ErrorMessage} See error.message for details.
+ * <ul>
+ * <li>NOT_SUPPORTED</li>
+ * <li>INVALID_PARAM</li>
+ * <li>NETWORK_FAILURE</li>
+ * <li>PENDING_REQUEST</li>
+ * <li>CLIENT_UNSUPPORTED_OPERATION</li>
+ * <li>INVALID_OPERATION</li>
+ * </ul>
+ */
+export function inviteAsync(payload: InvitePayload): Promise<number> {
+    return (window as any).Wortal.context.inviteAsync(payload);
 }
 
 /**
