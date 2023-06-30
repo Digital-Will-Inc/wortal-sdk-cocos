@@ -48,4 +48,17 @@ export class Wortal {
     performHapticFeedbackAsync(): Promise<void> {
         return (window as any).Wortal.performHapticFeedbackAsync();
     }
+
+    /**
+     * Gets the supported APIs for the current platform.
+     * @example
+     * let supportedAPIs = Wortal.getSupportedAPIs();
+     * if (supportedAPIs.includes("context.shareAsync")) {
+     *    shareWithFriendsDialog.show();
+     * }
+     * @returns {string[]} Array of supported APIs.
+     */
+    getSupportedAPIs(): string[] {
+        return (window as any).Wortal.getSupportedAPIs();
+    }
 }
