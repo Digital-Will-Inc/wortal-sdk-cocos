@@ -22,6 +22,7 @@ To upgrade the extension follow these steps:
 - Select the Project tab
 - Remove `wortal-sdk`
 - Wait for the Cocos notification that the removal was completed
+- Delete the `wortal-api` folder from the `assets` directory
 - Add the new version of the `wortal-sdk`
 
 ## How to Use
@@ -34,8 +35,11 @@ Interstitial ads can be shown at various points in the game such as a level end,
 interval in games with longer levels.
 
 ```typescript
+// noFill is optional and will call afterAd if not provided.
+Wortal.ads.showInterstitial('placement', 'description', beforeAd, afterAd, noFill?);
+
 // Player reached the next level.
-Wortal.ads.showInterstitial('next', 'NextLevel', pauseGame, resumeGame);
+Wortal.ads.showInterstitial('next', 'NextLevel', pauseGame, resumeGame, resumeAfterNoFill);
 
 // Player paused the game.
 Wortal.ads.showInterstitial('pause', 'PausedGame', pauseGame, resumeGame);
@@ -48,10 +52,15 @@ Rewarded ads can be shown too. These are longer, optional ads that the player ca
 must be notified of the ad and give permission to show before it can be shown.
 
 ```typescript
+// noFill is optional and will call afterAd if not provided.
+Wortal.ads.showRewarded('description', beforeAd, afterAd, adDismissed, adViewed, noFill?);
+
 // This example shows the game flow independent of the outcome of the ad.
+// Ex: Player gets bonus coins for watching the ad, but the game continues regardless of the outcome.
 Wortal.ads.showRewarded('BonusCoins', pauseGame, resumeGame, skipBonus, addBonusCoins);
 
 // This example shows the game flow depending on the outcome of the ad.
+// Ex: Player dies and can revive by watching an ad, but if they skip the ad they lose the level.
 Wortal.ads.showRewarded('ReviveAndContinue', pauseAudio, resumeAudio, endGame, continueGame);
 ```
 
@@ -85,21 +94,21 @@ The Context API is used to connect players and allow them to interact in the gam
 and send messages to each other.
 
 ```typescript
-// Invite a friend to play the game.
-Wortal.context.chooseAsync({
+// Invite a friend to play the game. Does not switch the player's current context.
+Wortal.context.inviteAsync({
     image: 'data:base64image',
     text: 'Invite text',
-    caption: 'Play',
+    cta: 'Play',
     data: { exampleData: 'yourData' },
-})
+}).then(() => console.log("Invite sent"));
 
 // Share your game activity with friends.
 Wortal.context.shareAsync({
     image: 'data:base64image',
     text: 'Share text',
-    caption: 'Play',
+    cta: 'Play',
     data: { exampleData: 'yourData' },
-}).then(result => console.log(result); // Contains shareCount with number of friends the share was sent to.
+}).then(result => console.log(result));
 ```
 
 ### In-App Purchases
@@ -130,7 +139,7 @@ you can track player's scores and compare them to other players.
 ```typescript
 // Get the top 10 entries on the global leaderboard.
 Wortal.leaderboard.getEntriesAsync('global', 10)
-    .then(entries => console.log(entries);
+    .then(entries => console.log(entries));
 
 // Add the player's score to the leaderboard.
 Wortal.leaderboard.sendEntryAsync('global', 100);
@@ -151,7 +160,7 @@ Wortal.player.getConnectedPlayersAsync({
     filter: 'ALL',
     size: 20,
     hoursSinceInvitation: 4,
-}).then(players => console.log(players.length);
+}).then(players => console.log(players.length));
 ```
 
 ### Session
@@ -163,5 +172,11 @@ Details about the current session can be accessed in the Session API.
 ```typescript
 // Get the entry point of where the game started from.
 Wortal.session.getEntryPointAsync()
- .then(entryPoint => console.log(entryPoint);
+ .then(entryPoint => console.log(entryPoint));
+
+// Get the entry point data from a social invite or share.
+// This is useful for tracking where players are coming from or
+// providing a reward for players who were invited to play.
+const data = Wortal.session.getEntryPointData();
+console.log(data);
 ```
