@@ -239,13 +239,13 @@ export interface LinkSharePayload {
  * SDK will use the current player's locale for locale matching.
  */
 export interface LocalizableContent {
-    /** T
-     * ext will be used if not finding matching locale
-     * */
+    /**
+     * Text that will be used if a matching locale was not found.
+     */
     default: string;
     /**
-     * Key value pairs of localized strings
-     * */
+     * Key value pairs of localized strings.
+     */
     localizations: Record<string, string>;
 }
 
