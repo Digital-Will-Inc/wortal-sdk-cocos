@@ -1,10 +1,14 @@
+import { Platform } from "../../../@types";
+import { TrafficSource } from "../interfaces/Session";
+import { ErrorMessage} from "../interfaces/Wortal";
+
 /**
  * Returns any data object associated with the entry point that the game was launched from.
  *
  * The contents of the object are developer-defined, and can occur from entry points on different platforms.
  * This will return null for older mobile clients, as well as when there is no data associated with the particular entry point.
  * @example
- * let data = Wortal.session.getEntryPointData();
+ * const data = Wortal.session.getEntryPointData();
  * console.log(data.property);
  * @returns {Record<string, unknown>} Data about the entry point or an empty object if none exists.
  */
@@ -47,7 +51,7 @@ export function setSessionData(data: Record<string, unknown>): void {
 /**
  * Gets the locale the player is using. This is useful for localizing your game.
  * @example
- * let lang = Wortal.session.getLocale();
+ * const lang = Wortal.session.getLocale();
  * @returns {string} Locale in [BCP47](http://www.ietf.org/rfc/bcp/bcp47.txt) format.
  */
 export function getLocale(): string {
@@ -58,7 +62,7 @@ export function getLocale(): string {
  * Gets the traffic source info for the game. This is useful for tracking where players are coming from.
  * For example, if you want to track where players are coming from for a specific campaign.
  * @example
- * let source = Wortal.session.getTrafficSource();
+ * const source = Wortal.session.getTrafficSource();
  * console.log(source['r_entrypoint']);
  * console.log(source['utm_source']);
  * @returns {TrafficSource} URL parameters attached to the game.
@@ -71,20 +75,10 @@ export function getTrafficSource(): TrafficSource {
  * Gets the platform the game is running on. This is useful for platform specific code.
  * For example, if you want to show a different social share asset on Facebook than on Link.
  * @example
- * let platform = Wortal.session.getPlatform();
+ * const platform = Wortal.session.getPlatform();
  * console.log(platform);
  * @returns {Platform} Platform the game is running on.
  */
 export function getPlatform(): Platform {
     return (window as any).Wortal.session.getPlatform();
 }
-
-/**
- * Data about the traffic source for this game.
- */
-export interface TrafficSource {
-    ['utm_source']?: string;
-    ['r_entrypoint']?: string;
-}
-
-export type Platform = 'wortal' | 'link' | 'viber' | 'gd' | 'facebook' | 'debug'

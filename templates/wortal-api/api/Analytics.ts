@@ -1,3 +1,5 @@
+import { ErrorMessage} from "../interfaces/Wortal";
+
 /**
  * Logs the start of a level.
  * @example
@@ -95,4 +97,54 @@ export function logTutorialEnd(tutorial: string, wasCompleted: string): void {
  */
 export function logGameChoice(decision: string, choice: string): void {
     (window as any).Wortal.analytics.logGameChoice(decision, choice);
+}
+
+/**
+ * Logs the player's social invite.
+ * @example
+ * Wortal.analytics.logSocialInvite('Leaderboard View');
+ * @param placement Placement of the invite.
+ */
+export function logSocialInvite(placement: string): void {
+    (window as any).Wortal.analytics.logSocialInvite(placement);
+}
+
+/**
+ * Logs the player's social share.
+ * @example
+ * Wortal.analytics.logSocialShare('Game Over UI');
+ * @param placement Placement of the share.
+ */
+export function logSocialShare(placement: string): void {
+    (window as any).Wortal.analytics.logSocialShare(placement);
+}
+
+/**
+ * Logs the player's purchase of an in-app product.
+ * @example
+ * Wortal.analytics.logPurchase('com.wortal.game.gems.100', '100 gems from shop sale');
+ * @param productID ID of the product the player purchased.
+ * @param details Additional details about the purchase.
+ * @throws {ErrorMessage} See error.message for more details.
+ * <ul>
+ * <li>INVALID_PARAM</li>
+ * </ul>
+ */
+export function logPurchase(productID: string, details?: string): void {
+    (window as any).Wortal.analytics.logPurchase(productID, details);
+}
+
+/**
+ * Logs the player's purchase of an in-app subscription.
+ * @example
+ * Wortal.analytics.logPurchaseSubscription('com.wortal.game.seasonpass', 'Season pass from level up reward UI');
+ * @param productID ID of the subscription product the player purchased.
+ * @param details Additional details about the purchase.
+ * @throws {ErrorMessage} See error.message for more details.
+ * <ul>
+ * <li>INVALID_PARAM</li>
+ * </ul>
+ */
+export function logPurchaseSubscription(productID: string, details?: string): void {
+    (window as any).Wortal.analytics.logPurchaseSubscription(productID, details);
 }

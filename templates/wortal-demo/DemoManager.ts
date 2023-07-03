@@ -96,6 +96,7 @@ export class DemoManager extends Component {
 
     log(msg: string) {
         this.txtLog.string = this.txtLog.string + "\n" + msg;
+        console.log(msg);
     }
 
     callInterstitial() {
@@ -178,8 +179,8 @@ export class DemoManager extends Component {
         Wortal.context.shareAsync({
             image: this.createImg(1200, 1200),
             text: "Let's play!",
-            intent: "REQUEST",
-            caption: "Play",
+            intent: "SHARE",
+            cta: "Play",
         })
             .then((result) => console.log(result))
             .catch(error => this.log(error));
@@ -189,7 +190,7 @@ export class DemoManager extends Component {
         Wortal.context.updateAsync({
             image: this.createImg(256, 256),
             text: "We played!",
-            caption: "Play",
+            cta: "Play",
             data: {game: "da test"},
         })
             .then(() => this.log(Wortal.context.getId()))
@@ -295,7 +296,7 @@ export class DemoManager extends Component {
         ctx.fillStyle = `hsl(${Math.floor(Math.random() * 360)}deg,20%,50%)`;
         ctx.font = `${width / 16}px sans-serif`;
         ctx.textAlign = 'center';
-        ctx.fillText('wortal-sdk-est', width / 2, height / 2);
+        ctx.fillText('wortal-sdk-test', width / 2, height / 2);
         return canvas.toDataURL();
     }
 }

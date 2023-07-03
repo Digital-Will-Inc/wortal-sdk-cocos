@@ -1,4 +1,6 @@
-import { WortalPlayer } from "./WortalPlayer";
+import { Leaderboard } from "../classes/Leaderboard";
+import { LeaderboardEntry } from "../classes/LeaderboardEntry";
+import { ErrorMessage} from "../interfaces/Wortal";
 
 /**
  * Gets the leaderboard with the given name. Access the leaderboard API via the Leaderboard returned here.
@@ -126,84 +128,4 @@ export function getEntryCountAsync(name: string): Promise<number> {
  */
 export function getConnectedPlayersEntriesAsync(name: string, count: number, offset: number): Promise<LeaderboardEntry[]> {
     return (window as any).Wortal.leaderboard.getConnectedPlayersEntriesAsync(name, count, offset);
-}
-
-/**
- * Represents a single leaderboard.
- */
-export class Leaderboard {
-    private _current: LeaderboardData;
-    constructor(id: number, name: string, contextId: string = "") {
-        this._current.id = id;
-        this._current.name = name;
-        this._current.contextId = contextId;
-    }
-
-    get name(): string {
-        return this._current.name;
-    }
-
-    get contextId(): string {
-        return this._current.contextId;
-    }
-}
-
-/**
- * Represents a single entry in a leaderboard.
- */
-export class LeaderboardEntry {
-    private _current: LeaderboardEntryData;
-    constructor(entry: LeaderboardEntryData) {
-        this._current.player = entry.player;
-        this._current.rank = entry.rank;
-        this._current.score = entry.score;
-        this._current.formattedScore = entry.formattedScore;
-        this._current.timestamp = entry.timestamp;
-        this._current.details = entry.details;
-    }
-
-    get player(): WortalPlayer {
-        return new WortalPlayer(this._current.player!);
-    }
-
-    get rank(): number {
-        return this._current.rank;
-    }
-
-    get score(): number {
-        return this._current.score;
-    }
-
-    get formattedScore(): string {
-        return this._current.formattedScore;
-    }
-
-    get timestamp(): number {
-        return this._current.timestamp;
-    }
-
-    get details(): string {
-        return this._current.details!;
-    }
-}
-
-/**
- * Data about a leaderboard.
- */
-interface LeaderboardData {
-    id: number;
-    name: string;
-    contextId: string;
-}
-
-/**
- * Data about a leaderboard entry.
- */
-export interface LeaderboardEntryData {
-    player?: WortalPlayer,
-    rank: number,
-    score: number,
-    formattedScore: string,
-    timestamp: number,
-    details?: string,
 }
