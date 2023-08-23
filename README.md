@@ -25,6 +25,49 @@ To upgrade the extension follow these steps:
 - Delete the `wortal-api` folder from the `assets` directory
 - Add the new version of the `wortal-sdk`
 
+### Initialization
+
+#### Auto initialization
+
+By default, the SDK will initialize itself automatically. This is the recommended way to initialize the SDK.
+
+The SDK will be ready for use after `Wortal.isInitialized` returns `true`. It will also fire the `wortal-sdk-initialized` window event at this time.
+
+```typescript
+if (Wortal.isInitialized) {
+    // SDK is ready to use.
+}
+
+window.addEventListener('wortal-sdk-initialized', () => {
+    // SDK is ready to use.
+});
+```
+
+### Manual initialization
+
+Alternatively, you can initialize the SDK manually. This is useful if the game has large asset bundles that take some
+time to download. Follow these steps to enable manual initialization:
+
+1. Modify the `build-templates/web-mobile/index.ejs` file to set the `data-manual-init="true"` attribute on the SDK script tag:
+
+`<script src="https://storage.googleapis.com/html5gameportal.com/wortal-sdk/wortal-core-x.x.js" data-manual-init="true"></script>`
+
+2. Modify the `build-templates/common/application.ejs` file to comment out the loading progress reporting in the `onProgress` function.
+
+3. Call `Wortal.initializeAsync()` as early as possible in your game's initialization code, then `Wortal.startGameAsync()`
+  when your game has finished loading and is ready for play.
+
+4. Report the loading progress of the game in your initialization code. The game will not start until the loading progress reaches 100%.
+
+```typescript
+Wortal.initializeAsync().then(() => {
+    // SDK is ready to use.
+    // Wait for game to finish loading.
+    Wortal.setLoadingProgress(100);
+    Wortal.startGameAsync();
+});
+```
+
 ## How to Use
 
 ### Ads
@@ -36,7 +79,7 @@ interval in games with longer levels.
 
 ```typescript
 // noFill is optional and will call afterAd if not provided.
-Wortal.ads.showInterstitial('placement', 'description', beforeAd, afterAd, noFill?);
+Wortal.ads.showInterstitial('placement', 'description', beforeAd, afterAd, noFill);
 
 // Player reached the next level.
 Wortal.ads.showInterstitial('next', 'NextLevel', pauseGame, resumeGame, resumeAfterNoFill);
@@ -53,7 +96,7 @@ must be notified of the ad and give permission to show before it can be shown.
 
 ```typescript
 // noFill is optional and will call afterAd if not provided.
-Wortal.ads.showRewarded('description', beforeAd, afterAd, adDismissed, adViewed, noFill?);
+Wortal.ads.showRewarded('description', beforeAd, afterAd, adDismissed, adViewed, noFill);
 
 // This example shows the game flow independent of the outcome of the ad.
 // Ex: Player gets bonus coins for watching the ad, but the game continues regardless of the outcome.
@@ -205,4 +248,30 @@ Wortal.session.getEntryPointAsync()
 // providing a reward for players who were invited to play.
 const data = Wortal.session.getEntryPointData();
 console.log(data);
+```
+
+### Tournament
+
+[API Reference](https://sdk.html5gameportal.com/api/tournament/)
+
+The Tournament API is used to create and manage tournaments for your game.
+
+```typescript
+// Create a tournament.
+const payload = {
+    initialScore: 100,
+    config: {
+        title: "Level 1 Tournament",
+    },
+    data: {
+        level: 1,
+    },
+};
+
+Wortal.tournament.createAsync(payload)
+    .then(tournament => console.log(tournament.payload["level"]));
+
+// Post a score to a tournament.
+Wortal.tournament.postScoreAsync(200)
+    .then(() => console.log("Score posted!"));
 ```
