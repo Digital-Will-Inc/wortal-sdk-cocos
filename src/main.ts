@@ -69,5 +69,4 @@ export const load: BuildPlugin.load = () => {
 
 export const unload: BuildPlugin.Unload = () => {
     console.log("[Wortal] Extension disabled.");
-    //TODO: safely remove assets that were copied into project
 };
