@@ -6,28 +6,32 @@ import { Signature } from "../types/IAP";
 export interface Product {
     /**
      * Title of the product
-     * */
+     */
     title: string,
     /**
-     * ID of the product
-     * */
+     * The product's game-specified identifier.
+     */
     productID: string,
     /**
-     * Text description of the product
-     * */
+     * The product description.
+     */
     description?: string,
     /**
-     * A URL to the product's image
-     * */
+     * A link to the product's associated image.
+     */
     imageURI?: string,
     /**
      * A localized string representing the product's price in the local currency, e.g. "$1"
-     * */
+     */
     price: string,
     /**
      * A string representing which currency is the price calculated in, following [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217)
-     * */
-    priceCurrencyCode: string
+     */
+    priceCurrencyCode: string,
+    /**
+     * The numeric price of a product.
+     */
+    priceAmount?: number,
 }
 
 /**
@@ -35,12 +39,12 @@ export interface Product {
  */
 export interface PurchaseConfig {
     /**
-     * ID of the product
-     * */
+     * The identifier of the product to purchase.
+     */
     productID: string,
     /**
-     * Optional payload assigned by game developer, which will be also attached in the signed purchase request
-     * */
+     * An optional developer-specified payload, to be included in the returned purchase's signed request.
+     */
     developerPayload?: string
 }
 
@@ -49,27 +53,43 @@ export interface PurchaseConfig {
  */
 export interface Purchase {
     /**
-     * Optional payload assigned by game developer, which will be also attached in the signed purchase request
-     * */
+     * A developer-specified string, provided during the purchase of the product.
+     */
     developerPayload?: string,
     /**
-     * ID of the payment (e.g. Google Play Order)
-     * */
+     * The identifier for the purchase transaction.
+     */
     paymentID: string,
     /**
-     * ID of the product
-     * */
+     * The product's game-specified identifier.
+     */
     productID: string,
     /**
-     * Timestamp of the payment
-     * */
+     * Unix timestamp of when the purchase occurred.
+     */
     purchaseTime: string,
     /**
-     * Token for purchase consumption
-     * */
+     * A token representing the purchase that may be used to consume the purchase.
+     */
     purchaseToken: string,
     /**
-     * Signature of the purchase info for server side verification
-     * */
-    signedRequest: Signature
+     * Server-signed encoding of the purchase request.
+     */
+    signedRequest: Signature,
+    /**
+     * Whether the purchase has been consumed. Facebook only.
+     */
+    isConsumed?: boolean,
+    /**
+     * The current status of the purchase, such as 'charge' or 'refund'. Facebook only.
+     */
+    paymentActionType?: string,
+    /**
+     * The platform associated with the purchase, such as "FB" for Facebook and "GOOGLE" for Google. Facebook only.
+     */
+    purchasePlatform?: PurchasePlatform,
+    /**
+     * Contains the local amount and currency associated with the purchased item. Facebook only.
+     */
+    purchasePrice?: object,
 }
