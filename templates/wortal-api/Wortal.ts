@@ -6,6 +6,7 @@ import * as _leaderboard from './api/Leaderboard';
 import * as _notifications from './api/Notifications';
 import * as _player from './api/Player';
 import * as _session from './api/Session';
+import * as _tournament from './api/Tournament';
 
 /**
  * API for the Wortal SDK.
@@ -27,6 +28,64 @@ export class Wortal {
     static player = _player;
     /** Session API */
     static session = _session;
+    /** Tournament API */
+    static tournament = _tournament;
+
+    /**
+     * Returns true if the SDK Core has been initialized.
+     */
+    isInitialized: boolean = (window as any).Wortal.isInitialized;
+
+    /**
+     * Initializes the SDK. This should be called before any other SDK functions. It is recommended to call this
+     * as soon as the script has been loaded to shorten the initialization time.
+     *
+     * NOTE: This is only available if the manual initialization option is set to true. Otherwise, the SDK will initialize automatically.
+     *
+     * PLATFORM NOTE: Only supported on Viber, Link and Facebook.
+     * @example
+     * Wortal.initializeAsync().then(() => {
+     *    // SDK is ready to use, wait for game to finish loading.
+     *    Wortal.setLoadingProgress(100);
+     *    Wortal.startGameAsync();
+     * });
+     * @returns {Promise<void>} Promise that resolves when the SDK initialized successfully.
+     * @throws {ErrorMessage} See error.message for details.
+     * <ul>
+     * <li>INITIALIZATION_ERROR</li>
+     * <li>NOT_SUPPORTED</li>
+     * </ul>
+     */
+    async initializeAsync(): Promise<void> {
+        return (window as any).Wortal.initializeAsync();
+    }
+
+    /**
+     * This indicates that the game has finished initial loading and is ready to start. Context information will be
+     * up-to-date when the returned promise resolves. The loading screen will be removed after this is called along with
+     * the following conditions:
+     * <ul>
+     * <li>initializeAsync has been called and resolved</li>
+     * <li>setLoadingProgress has been called with a value of 100</li>
+     * </ul>
+     *
+     * NOTE: This is only available if the manual initialization option is set to true. Otherwise, the game will start automatically.
+     *
+     * PLATFORM NOTE: Only supported on Viber, Link and Facebook.
+     * @example
+     * Wortal.startGameAsync().then(() => {
+     *    // Game is rendered to player.
+     * });
+     * @returns {Promise<void>} Promise that resolves when the game has started successfully.
+     * @throws {ErrorMessage} See error.message for details.
+     * <ul>
+     * <li>INITIALIZATION_ERROR</li>
+     * <li>NOT_SUPPORTED</li>
+     * </ul>
+     */
+    async startGameAsync(): Promise<void> {
+        return (window as any).Wortal.startGameAsync();
+    }
 
     /**
      * Sets a callback which will be invoked when the app is brought to the background.

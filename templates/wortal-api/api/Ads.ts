@@ -1,5 +1,19 @@
 import { PlacementType } from "../types/Ads";
-import { ErrorMessage} from "../interfaces/Wortal";
+import { ErrorMessage } from "../interfaces/Wortal";
+
+/**
+ * Returns whether ads are blocked for the current session. This can be used to determine if an alternative flow should
+ * be used instead of showing ads, or prompt the player to disable the ad blocker.
+ * @example
+ * if (Wortal.ads.isAdBlocked()) {
+ *    // Show a message to the player to disable their ad blocker.
+ *    // Or use an alternative flow that doesn't require ads - social invites for rewards as an example.
+ * }
+ * @returns {boolean} True if ads are blocked for the current session. False if ads are not blocked.
+ */
+export function isAdBlocked(): boolean {
+    return (window as any).Wortal.ads.isAdBlocked();
+}
 
 /**
  * Shows an interstitial ad. These can be shown at various points in the game such as a level end, restart or a timed

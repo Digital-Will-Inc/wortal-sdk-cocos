@@ -1,6 +1,7 @@
 import { Platform } from "../../../@types";
 import { TrafficSource } from "../interfaces/Session";
-import { ErrorMessage} from "../interfaces/Wortal";
+import { Device, Orientation } from "../types/Session";
+import { ErrorMessage } from "../interfaces/Wortal";
 
 /**
  * Returns any data object associated with the entry point that the game was launched from.
@@ -21,7 +22,7 @@ export function getEntryPointData(): Record<string, unknown> {
  * @example
  * Wortal.session.getEntryPointAsync()
  *  .then(entryPoint => console.log(entryPoint);
- * @returns {Promise<string>} The name of the entry point from which the user started the game
+ * @returns {Promise<string>} Promise that resolves with the name of the entry point from which the user started the game.
  * @throws {ErrorMessage} See error.message for details.
  * <ul>
  * <li>NOT_SUPPORTED</li>
@@ -81,4 +82,66 @@ export function getTrafficSource(): TrafficSource {
  */
 export function getPlatform(): Platform {
     return (window as any).Wortal.session.getPlatform();
+}
+
+/**
+ * Gets the device the player is using. This is useful for device specific code.
+ * @example
+ * const device = Wortal.session.getDevice();
+ * console.log(device);
+ * @returns {Device} Device the player is using.
+ */
+export function getDevice(): Device {
+    return (window as any).Wortal.session.getDevice();
+}
+
+/**
+ * Gets the orientation of the device the player is using. This is useful for determining how to display the game.
+ * @example
+ * const orientation = Wortal.session.getOrientation();
+ * if (orientation === 'portrait') {
+ *    // Render portrait mode.
+ * }
+ * @returns {Orientation} Orientation of the device the player is using.
+ */
+export function getOrientation(): Orientation {
+    return (window as any).Wortal.session.getOrientation();
+}
+
+/**
+ * Assigns a callback to be invoked when the orientation of the device changes.
+ * @example
+ * Wortal.session.onOrientationChange(orientation => {
+ *    if (orientation === 'portrait') {
+ *      // Render portrait mode
+ *    }
+ * });
+ * @param callback Callback to be invoked when the orientation of the device changes.
+ */
+export function onOrientationChange(callback: (orientation: Orientation) => void): void {
+    return (window as any).Wortal.session.onOrientationChange(orientation => {
+        callback(orientation);
+    });
+}
+
+/**
+ * Request to switch to another game. The API will reject if the switch fails - else, the client will load the new game.
+ * @example
+ * Wortal.session.switchGameAsync(
+ *   '12345678',
+ *   { referrer: 'game_switch', reward_coins: 30 });
+ * @param gameID ID of the game to switch to. The application must be a Wortal game.
+ * @param data An optional data payload. This will be set as the entrypoint data for the game being switched to. Must be less than or equal to 1000 characters when stringified.
+ * @returns {Promise<void>} Promise that resolves when the game has switched. If the game fails to switch, the promise will reject.
+ * @throws {ErrorMessage} See error.message for details.
+ * <ul>
+ * <li>INVALID_PARAMS</li>
+ * <li>USER_INPUT</li>
+ * <li>PENDING_REQUEST</li>
+ * <li>CLIENT_REQUIRES_UPDATE</li>
+ * <li>NOT_SUPPORTED</li>
+ * </ul>
+ */
+export function switchGameAsync(gameID: string, data?: object): Promise<void> {
+    return (window as any).Wortal.session.switchGameAsync(gameID, data);
 }

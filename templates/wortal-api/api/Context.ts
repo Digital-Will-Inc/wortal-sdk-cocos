@@ -7,7 +7,7 @@ import {
 } from "../interfaces/Context";
 import { ContextType } from "../types/Context";
 import { WortalPlayer } from "./Player";
-import { ErrorMessage} from "../interfaces/Wortal";
+import { ErrorMessage } from "../interfaces/Wortal";
 
 /**
  * Gets the ID of the current context.

@@ -1,9 +1,9 @@
 import ScheduledNotification from "../classes/ScheduledNotification";
 import { NotificationPayload, NotificationScheduleResult } from "../interfaces/Notifications";
-import { ErrorMessage} from "../interfaces/Wortal";
+import { ErrorMessage } from "../interfaces/Wortal";
 
 /**
- * Schedule a notification to be delivered to the player at a later time.
+ * Schedule a notification to be delivered to the player at a later time. Limit of 5 pending scheduled notifications per recipient.
  * @example
  * Wortal.notifications.scheduleAsync({
  *    title: "Your energy is full!",
