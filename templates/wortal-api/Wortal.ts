@@ -6,6 +6,7 @@ import * as _leaderboard from './api/Leaderboard';
 import * as _notifications from './api/Notifications';
 import * as _player from './api/Player';
 import * as _session from './api/Session';
+import * as _tournament from './api/Tournament';
 
 /**
  * API for the Wortal SDK.
@@ -27,6 +28,8 @@ export class Wortal {
     static player = _player;
     /** Session API */
     static session = _session;
+    /** Tournament API */
+    static tournament = _tournament;
 
     /**
      * Sets a callback which will be invoked when the app is brought to the background.
