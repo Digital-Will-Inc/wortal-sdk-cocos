@@ -1,6 +1,6 @@
 import { Leaderboard } from "../classes/Leaderboard";
 import { LeaderboardEntry } from "../classes/LeaderboardEntry";
-import { ErrorMessage} from "../interfaces/Wortal";
+import { ErrorMessage } from "../interfaces/Wortal";
 
 /**
  * Fetch a specific leaderboard belonging to this game.

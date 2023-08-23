@@ -1,5 +1,5 @@
 import { Product, Purchase, PurchaseConfig } from "../interfaces/IAP";
-import { ErrorMessage} from "../interfaces/Wortal";
+import { ErrorMessage } from "../interfaces/Wortal";
 
 /**
  * Checks whether IAP is enabled in this session.

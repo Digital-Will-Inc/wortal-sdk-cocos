@@ -1,6 +1,6 @@
 import { WortalPlayer } from "../classes/WortalPlayer";
 import { ConnectedPlayerPayload, SignedASID } from "../interfaces/Player";
-import { ErrorMessage} from "../interfaces/Wortal";
+import { ErrorMessage } from "../interfaces/Wortal";
 
 /**
  * Gets the player's ID from the platform.
