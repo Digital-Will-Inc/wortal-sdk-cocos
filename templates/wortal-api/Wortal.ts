@@ -1,3 +1,4 @@
+import * as _achievements from './api/Achievements';
 import * as _ads from './api/Ads';
 import * as _analytics from './api/Analytics';
 import * as _context from './api/Context';
@@ -13,6 +14,8 @@ import { AuthResponse } from './interfaces/Wortal';
  * API for the Wortal SDK.
  */
 export class Wortal {
+    /** Achievements API */
+    static achievements = _achievements;
     /** Ads API */
     static ads = _ads;
     /** Analytics API */
