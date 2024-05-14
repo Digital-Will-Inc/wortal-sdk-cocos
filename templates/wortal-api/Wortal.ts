@@ -7,6 +7,7 @@ import * as _leaderboard from './api/Leaderboard';
 import * as _notifications from './api/Notifications';
 import * as _player from './api/Player';
 import * as _session from './api/Session';
+import * as _stats from './api/Stats';
 import * as _tournament from './api/Tournament';
 import { AuthResponse } from './interfaces/Wortal';
 
@@ -32,6 +33,8 @@ export class Wortal {
     static player = _player;
     /** Session API */
     static session = _session;
+    /** Stats API */
+    static stats = _stats;
     /** Tournament API */
     static tournament = _tournament;
 
