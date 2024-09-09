@@ -2,6 +2,20 @@ import { PlacementType } from "../types/Ads";
 import { ErrorMessage } from "../interfaces/Wortal";
 
 /**
+ * Returns whether ads are enabled for the current session. This can be used to determine if an alternative flow should
+ * be used instead of showing ads.
+ * @example
+ * if (Wortal.ads.isEnabled()) {
+ *    // Call ad
+ *    // Or show rewarded ad button
+ * }
+ * @returns {boolean} True if ads are enabled for the current session. False if ads are disabled.
+ */
+export function isEnabled(): boolean {
+    return (window as any).Wortal.ads.isEnabled();
+}
+
+/**
  * Returns whether ads are blocked for the current session. This can be used to determine if an alternative flow should
  * be used instead of showing ads, or prompt the player to disable the ad blocker.
  * @example
