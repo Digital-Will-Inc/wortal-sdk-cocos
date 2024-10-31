@@ -122,6 +122,16 @@ export class Wortal {
     }
 
     /**
+     * Sets a callback which will be invoked when the app is brought to the foreground.
+     * @param callback Callback to invoke.
+     */
+    onResume(callback: Function): void{
+        (window as any).Wortal.onResume(() => {
+            callback();
+        });
+    }
+
+    /**
      * Requests and performs haptic feedback on supported devices.
      * @returns {Promise<void>} Haptic feedback requested successfully
      * @throws {ErrorMessage} See error.message for details.
