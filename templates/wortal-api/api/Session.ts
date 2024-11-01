@@ -3,6 +3,30 @@ import { TrafficSource } from "../interfaces/Session";
 import { Device, Orientation } from "../types/Session";
 import { ErrorMessage } from "../interfaces/Wortal";
 
+
+/**
+ * Tracks the start of a gameplay session, including resuming play after a break.
+ * Call whenever the player starts playing or resumes playing after a break
+ * (menu/loading/achievement screen, game paused, etc.).
+ * @example
+ * // Player closes in-game menu and resumes playing
+ * Wortal.session.gameplayStart();
+ */
+export function gameplayStart(): void{
+    (window as any).Wortal.session.gameplayStart();
+}
+
+/**
+ * Tracks the end of a gameplay session, including pausing play or opening a menu.
+ * Call on every game break (entering a menu, switching level, pausing the game, ...)
+ * @example
+ * // Player opens in-game menu
+ * Wortal.session.gameplayStop();
+ */
+export function gameplayStop(): void{
+    (window as any).Wortal.session.gameplayStop();
+}
+
 /**
  * Returns any data object associated with the entry point that the game was launched from.
  *
@@ -144,4 +168,33 @@ export function onOrientationChange(callback: (orientation: Orientation) => void
  */
 export function switchGameAsync(gameID: string, data?: object): Promise<void> {
     return (window as any).Wortal.session.switchGameAsync(gameID, data);
+}
+
+/**
+ *Returns whether the audio is enabled for the player.
+ * @returns {boolean} True if audio is enabled, false if it is disabled.
+ */
+export function isAudioEnabled(): boolean {
+    return (window as any).Wortal.session.isAudioEnabled();
+}
+
+/**
+ * Assigns a callback to be invoked when the audio status of the player changes.
+ * @param callback Callback to be invoked when the audio status of the player changes.
+ */
+export function onAudioStatusChange(callback: (isAudioEnabled: boolean) => void): void{
+    (window as any).Wortal.session.onAudioStatusChange(status => {
+        callback(status);
+    })
+}
+
+/**
+ * The happyTimeAsync method can be called on various player achievements (beating a boss, reaching a high score, etc.).
+ * It makes the website celebrate (for example by launching some confetti).
+ * @example
+ * // Player defeats a boss
+ * Wortal.session.happyTime();
+ */
+export function happyTime(): void{
+    (window as any).Wortal.session.happyTime();
 }
