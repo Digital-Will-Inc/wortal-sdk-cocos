@@ -5,10 +5,18 @@
         "outDir": "./dist",
         "rootDir": "./src",
         "allowJs": true,
-        "lib": ["dom", "es7"],
+        "lib": [
+            "dom",
+            "es7"
+        ],
         "esModuleInterop": true,
         "inlineSourceMap": false
     },
-    "exclude": ["./dist"],
-    "include": ["./src"]
+    "exclude": [
+        "./dist",
+    ],
+    "include": [
+        "./src",
+        "./native"
+    ]
 }

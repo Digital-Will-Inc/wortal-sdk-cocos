@@ -1,6 +1,6 @@
 {
     "package_version": 2,
-    "version": "3.1.3",
+    "version": "3.1.4",
     "name": "wortal-sdk",
     "title": "i18n:wortal-sdk.title",
     "description": "i18n:wortal-sdk.description",
@@ -16,5 +16,12 @@
     "scripts": {
         "build": "tsc -b",
         "watch": "tsc -w"
+    },
+    "native": {
+        "android": "./native/android",
+        "ios": "./native/ios"
+    },
+    "engines": {
+        "cocos": ">=3.0.0"
     }
 }
