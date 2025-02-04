@@ -10,7 +10,8 @@
             "es7"
         ],
         "esModuleInterop": true,
-        "inlineSourceMap": false
+        "inlineSourceMap": false,
+        "skipLibCheck": true
     },
     "exclude": [
         "./dist",
