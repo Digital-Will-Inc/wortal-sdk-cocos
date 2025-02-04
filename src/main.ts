@@ -32,6 +32,7 @@ export const load: BuildPlugin.load = () => {
     }
 
     const static_templates = path.join(project_path, "extensions/" + PACKAGE_NAME + "/templates/");
+    const native_folder = path.join(project_path, "extensions/" + PACKAGE_NAME + "/native");
     const versioned_templates = path.join(static_templates + version + "/");
 
     const assets = [
@@ -47,6 +48,10 @@ export const load: BuildPlugin.load = () => {
             src: path.join(static_templates, demo_dir),
             dest: path.join(assets_dir, demo_dir)
         },
+        {
+            src: native_folder,
+            dest: path.join(project_path, "native")
+        }
     ];
 
     log("Copying assets..");

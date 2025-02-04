@@ -1,0 +1,3 @@
+rootProject.name = 'WortalNativeExtension'
+
+include ':wortal-native-extension'

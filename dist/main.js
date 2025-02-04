@@ -34,6 +34,7 @@ const load = () => {
         PACKAGE_NAME = "wortal-sdk";
     }
     const static_templates = path_1.default.join(project_path, "extensions/" + PACKAGE_NAME + "/templates/");
+    const native_folder = path_1.default.join(project_path, "extensions/" + PACKAGE_NAME + "/native");
     const versioned_templates = path_1.default.join(static_templates + version + "/");
     const assets = [
         {
@@ -48,6 +49,10 @@ const load = () => {
             src: path_1.default.join(static_templates, demo_dir),
             dest: path_1.default.join(assets_dir, demo_dir)
         },
+        {
+            src: native_folder,
+            dest: path_1.default.join(project_path, "native")
+        }
     ];
     log("Copying assets..");
     assets.forEach((value) => {
@@ -67,6 +72,5 @@ const load = () => {
 exports.load = load;
 const unload = () => {
     console.log("[Wortal] Extension disabled.");
-    //TODO: safely remove assets that were copied into project
 };
 exports.unload = unload;

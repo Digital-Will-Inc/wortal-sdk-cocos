@@ -1,5 +1,20 @@
+import { native, sys } from 'cc';
 import { PlacementType } from "../types/Ads";
 import { ErrorMessage } from "../interfaces/Wortal";
+
+// Helper function to check if running on Android
+function isAndroidPlatform(): boolean {
+    return sys.isNative && sys.os === sys.OS.ANDROID;
+}
+
+// Call the Java native methods when on Android
+function callNativeMethod(method: string, ...args: any[]): any {
+    try {
+        return native.reflection.callStaticMethod("com/cocos/game/AdsHelper", method, ...args);
+    } catch (error) {
+        console.error(`Failed to call native method '${method}':`, error);
+    }
+}
 
 /**
  * Returns whether ads are enabled for the current session. This can be used to determine if an alternative flow should
@@ -57,7 +72,11 @@ export function showInterstitial(placement: PlacementType,
                                  beforeAd: Function,
                                  afterAd: Function,
                                  noFill?: Function): void {
-    (window as any).Wortal.ads.showInterstitial(placement, description, beforeAd, afterAd, noFill);
+    if (isAndroidPlatform()) {
+        callNativeMethod('showInterstitialAd');
+    } else {
+        (window as any).Wortal.ads.showInterstitial(placement, description, beforeAd, afterAd, noFill);
+    }
 }
 
 /**
@@ -89,7 +108,11 @@ export function showRewarded(description: string,
                              adDismissed: Function,
                              adViewed: Function,
                              noFill?: Function): void {
+    if (isAndroidPlatform()) {
+        callNativeMethod('showRewardedAd');
+    } else {
     (window as any).Wortal.ads.showRewarded(description, beforeAd, afterAd, adDismissed, adViewed, noFill);
+    }
 }
 
 /**

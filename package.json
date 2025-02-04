@@ -1,6 +1,6 @@
 {
     "package_version": 2,
-    "version": "3.1.0",
+    "version": "3.1.4",
     "name": "wortal-sdk",
     "title": "i18n:wortal-sdk.title",
     "description": "i18n:wortal-sdk.description",
@@ -11,10 +11,18 @@
         "@types/fs-extra": "^5.0.4",
         "@types/node": "^14.5.2",
         "compare-versions": "^5.0.1",
-        "fs-extra": "^10.0.0"
+        "fs-extra": "^10.0.0",
+        "typescript": "^5.7.3"
     },
     "scripts": {
         "build": "tsc -b",
         "watch": "tsc -w"
+    },
+    "native": {
+        "android": "./native/android",
+        "ios": "./native/ios"
+    },
+    "engines": {
+        "cocos": ">=3.0.0"
     }
 }
